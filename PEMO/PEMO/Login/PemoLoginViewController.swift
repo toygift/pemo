@@ -22,7 +22,12 @@ class PemoLoginViewController: UIViewController {
     
     @IBAction func login(_ sender: UIButton) {
         print("로그인")
-        Toast(text: "로그인실패").show()
+        guard let email = emailTextField.text, let password = passwordTextField.text else {
+            // guard 문이 거짓일경우 들어옴
+            return
+        }
+        self.login(email: email, password: password)
+        
 //        emailTextField.resignFirstResponder()
 //        passwordTextField.resignFirstResponder()
     }
@@ -41,7 +46,7 @@ class PemoLoginViewController: UIViewController {
         self.uiCustom()
         self.emailTextField.delegate = self
         self.passwordTextField.delegate = self
-        navigationController?.navigationBar.isHidden = true
+//        navigationController?.navigationBar.isHidden = true
     }
     override func viewWillAppear(_ animated: Bool) {
         self.emailTextField.becomeFirstResponder()
@@ -75,8 +80,8 @@ extension PemoLoginViewController: UITextFieldDelegate {
 extension PemoLoginViewController {
     func uiCustom() {
         emailTextField.becomeFirstResponder()
-        emailTextField.addBorderBottom(height: 1.0, color: UIColor.lightGray)
-        passwordTextField.addBorderBottom(height: 1.0, color: UIColor.lightGray)
+        emailTextField.setBottomBorder()
+        passwordTextField.setBottomBorder()
         loginButton.layer.cornerRadius = 10
         loginButton.layer.masksToBounds = true
         loginFacebookButton.layer.cornerRadius = 10

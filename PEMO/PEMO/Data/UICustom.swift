@@ -10,10 +10,24 @@ import UIKit
 
 
 extension UITextField {
-    func addBorderBottom(height: CGFloat, color: UIColor) {
+    func setBottomBorder() {
+        self.borderStyle = .none
+        self.layer.backgroundColor = UIColor.white.cgColor
+        
+        self.layer.masksToBounds = false
+        self.layer.shadowColor = UIColor.gray.cgColor
+        self.layer.shadowOffset = CGSize(width: 0.0, height: 1.0)
+        self.layer.shadowOpacity = 1.0
+        self.layer.shadowRadius = 0.0
+    }
+}
+
+extension UIView {
+    // 메인화면 하단 View Top Border
+    func addTopBorderWithColor(color: UIColor, width: CGFloat) {
         let border = CALayer()
-        border.frame = CGRect(x: 0, y: self.frame.height-height, width: self.frame.width, height: height)
         border.backgroundColor = color.cgColor
+        border.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: width)
         self.layer.addSublayer(border)
     }
 }

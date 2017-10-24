@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		16259B12A8563915E7F5382C /* Pods_PEMO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F3B371CA6773E7A7317818 /* Pods_PEMO.framework */; };
+		3FCC0DEF1F9F51230065070A /* PemoNewMemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FCC0DEE1F9F51230065070A /* PemoNewMemoViewController.swift */; };
+		3FCC0DF11F9F53900065070A /* PemoFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FCC0DF01F9F53900065070A /* PemoFolderViewController.swift */; };
+		3FCC0DF31F9F54AB0065070A /* ss.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3FCC0DF21F9F54AA0065070A /* ss.jpg */; };
+		3FCC0DF51F9F94140065070A /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FCC0DF41F9F94140065070A /* DataManager.swift */; };
 		3FD2B70A1F9DB3E500204362 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD2B7091F9DB3E500204362 /* AppDelegate.swift */; };
 		3FD2B70F1F9DB3E500204362 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3FD2B70D1F9DB3E500204362 /* Main.storyboard */; };
 		3FD2B7121F9DB3E500204362 /* PEMO.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3FD2B7101F9DB3E500204362 /* PEMO.xcdatamodeld */; };
@@ -16,9 +20,14 @@
 		3FD2B71F1F9DB4FD00204362 /* PemoLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD2B71E1F9DB4FD00204362 /* PemoLoginViewController.swift */; };
 		3FD2B7221F9DBF0400204362 /* PemoJoinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD2B7211F9DBF0400204362 /* PemoJoinViewController.swift */; };
 		3FD2B7251F9DD7E700204362 /* UICustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD2B7241F9DD7E700204362 /* UICustom.swift */; };
+		3FFCD6FF1F9E16A500C435E1 /* PemoMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFCD6FE1F9E16A500C435E1 /* PemoMainViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3FCC0DEE1F9F51230065070A /* PemoNewMemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoNewMemoViewController.swift; sourceTree = "<group>"; };
+		3FCC0DF01F9F53900065070A /* PemoFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoFolderViewController.swift; sourceTree = "<group>"; };
+		3FCC0DF21F9F54AA0065070A /* ss.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ss.jpg; sourceTree = "<group>"; };
+		3FCC0DF41F9F94140065070A /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		3FD2B7061F9DB3E500204362 /* PEMO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PEMO.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3FD2B7091F9DB3E500204362 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3FD2B70E1F9DB3E500204362 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -29,6 +38,7 @@
 		3FD2B71E1F9DB4FD00204362 /* PemoLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoLoginViewController.swift; sourceTree = "<group>"; };
 		3FD2B7211F9DBF0400204362 /* PemoJoinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoJoinViewController.swift; sourceTree = "<group>"; };
 		3FD2B7241F9DD7E700204362 /* UICustom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICustom.swift; sourceTree = "<group>"; };
+		3FFCD6FE1F9E16A500C435E1 /* PemoMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoMainViewController.swift; sourceTree = "<group>"; };
 		84F3B371CA6773E7A7317818 /* Pods_PEMO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PEMO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8D0827C7AE4587B52D46C0A /* Pods-PEMO.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PEMO.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PEMO/Pods-PEMO.debug.xcconfig"; sourceTree = "<group>"; };
 		ED92B6C64577706295D74D60 /* Pods-PEMO.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PEMO.release.xcconfig"; path = "Pods/Target Support Files/Pods-PEMO/Pods-PEMO.release.xcconfig"; sourceTree = "<group>"; };
@@ -69,13 +79,16 @@
 			children = (
 				3FD2B7091F9DB3E500204362 /* AppDelegate.swift */,
 				3FD2B70D1F9DB3E500204362 /* Main.storyboard */,
+				3FCC0DF41F9F94140065070A /* DataManager.swift */,
 				3FD2B7261F9DD9D500204362 /* Data */,
+				3FFCD7001F9E16A900C435E1 /* Main */,
 				3FD2B7201F9DB50300204362 /* Login */,
 				3FD2B7231F9DBF0900204362 /* Join */,
 				3FD2B7131F9DB3E500204362 /* Assets.xcassets */,
 				3FD2B7151F9DB3E500204362 /* LaunchScreen.storyboard */,
 				3FD2B7181F9DB3E500204362 /* Info.plist */,
 				3FD2B7101F9DB3E500204362 /* PEMO.xcdatamodeld */,
+				3FCC0DF21F9F54AA0065070A /* ss.jpg */,
 			);
 			path = PEMO;
 			sourceTree = "<group>";
@@ -102,6 +115,16 @@
 				3FD2B7241F9DD7E700204362 /* UICustom.swift */,
 			);
 			path = Data;
+			sourceTree = "<group>";
+		};
+		3FFCD7001F9E16A900C435E1 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				3FCC0DF01F9F53900065070A /* PemoFolderViewController.swift */,
+				3FFCD6FE1F9E16A500C435E1 /* PemoMainViewController.swift */,
+				3FCC0DEE1F9F51230065070A /* PemoNewMemoViewController.swift */,
+			);
+			path = Main;
 			sourceTree = "<group>";
 		};
 		96DF54152575F1D169BFD8BD /* Pods */ = {
@@ -186,6 +209,7 @@
 				3FD2B7171F9DB3E500204362 /* LaunchScreen.storyboard in Resources */,
 				3FD2B7141F9DB3E500204362 /* Assets.xcassets in Resources */,
 				3FD2B70F1F9DB3E500204362 /* Main.storyboard in Resources */,
+				3FCC0DF31F9F54AB0065070A /* ss.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,7 +283,11 @@
 				3FD2B70A1F9DB3E500204362 /* AppDelegate.swift in Sources */,
 				3FD2B7251F9DD7E700204362 /* UICustom.swift in Sources */,
 				3FD2B7121F9DB3E500204362 /* PEMO.xcdatamodeld in Sources */,
+				3FCC0DEF1F9F51230065070A /* PemoNewMemoViewController.swift in Sources */,
 				3FD2B71F1F9DB4FD00204362 /* PemoLoginViewController.swift in Sources */,
+				3FCC0DF11F9F53900065070A /* PemoFolderViewController.swift in Sources */,
+				3FFCD6FF1F9E16A500C435E1 /* PemoMainViewController.swift in Sources */,
+				3FCC0DF51F9F94140065070A /* DataManager.swift in Sources */,
 				3FD2B7221F9DBF0400204362 /* PemoJoinViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

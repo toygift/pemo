@@ -7,9 +7,23 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
+import Toaster
+
+// MARK: - UserType
+//
+enum UserType: String {
+    case normal = "normal"
+    case facebook = "facebook"
+}
 
 class PemoJoinViewController: UIViewController {
 
+    // MARK: - var/let
+    //
+    var access_key: Bool = false // 페이스북로그인시 true
+  
     // MARK: - @IB
     //
     @IBOutlet var emailTextField: UITextField!
@@ -17,14 +31,41 @@ class PemoJoinViewController: UIViewController {
     @IBOutlet var passwordConfirmTextField: UITextField!
     @IBOutlet var joinButton: UIButton!
     @IBAction func join(_ sender: UIButton) {
-        print("조인")
-//        emailTextField.resignFirstResponder()
-//        passwordTextField.resignFirstResponder()
-//        passwordConfirmTextField.resignFirstResponder()
+        print("########################## 회원가입 버튼 클릭 ##########################")
+        
+        self.emailTextField.resignFirstResponder()
+        self.passwordTextField.resignFirstResponder()
+        self.passwordConfirmTextField.resignFirstResponder()
+
+        if (self.emailTextField.text?.isEmpty)! {
+            Toast(text: "이메일을 입력해주세요").show()
+        } else if self.checkEmailFormat(enteredEmail: self.emailTextField.text!) == false {
+            Toast(text: "잘못된 이메일 형식입니다").show()
+        } else if (passwordTextField.text?.count)! < 8 {
+            Toast(text: "패스워드는 8자 이상입니다").show()
+        } else if (passwordTextField.text?.isEmpty)! || (passwordConfirmTextField.text?.isEmpty)! {
+            Toast(text: "패스워드를 모두 입력해주세요").show()
+        } else if passwordTextField.text != passwordConfirmTextField.text {
+            Toast(text: "패스워드를 확인해주세요").show()
+        } else {
+            guard let email = self.emailTextField.text else { return }
+            guard let password = self.passwordTextField.text else { return }
+            self.joinWithAlamo(email: email, password: password, user_type: UserType.normal.rawValue)
+            UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        }
     }
+    // MARK: - 이메일정규식
+    //
+    func checkEmailFormat(enteredEmail:String) -> Bool {
+        let emailFormat = "[식"
+        let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailFormat)
+        return emailPredicate.evaluate(with: enteredEmail)
+    }
+    
     @IBAction func popViewController(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
     }
+    
     // MARK: - LIFE CYCLE
     //
     override func viewDidLoad() {
@@ -44,16 +85,11 @@ class PemoJoinViewController: UIViewController {
     }
     
 }
-extension PemoJoinViewController {
-    func uiCustom() {
-        emailTextField.becomeFirstResponder()
-        emailTextField.addBorderBottom(height: 1.0, color: UIColor.lightGray)
-        passwordTextField.addBorderBottom(height: 1.0, color: UIColor.lightGray)
-        passwordConfirmTextField.addBorderBottom(height: 1.0, color: UIColor.lightGray)
-        joinButton.layer.cornerRadius = 10
-        joinButton.layer.masksToBounds = true
-    }
-}
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------------------------------------------*/
+// MARK: - UITextFieldDelegate
+//
 extension PemoJoinViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if (textField.isEqual(self.emailTextField)) {
@@ -64,5 +100,46 @@ extension PemoJoinViewController: UITextFieldDelegate {
             self.join(joinButton)
         }
         return true
+    }
+}
+
+// MARK: - 서버통신 (Alamofire)
+//
+extension PemoJoinViewController {
+    func joinWithAlamo(email: String, password: String, user_type:String) {
+        print("########################## 알라모파이어 진입 ##########################")
+        let url = mainDomain + "user/"
+        let parameters: Parameters = ["username":email, "password":password, "user_type": user_type]
+        
+        let call = Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil)
+        call.responseJSON { (response) in
+            switch response.result {
+            case .success(let value):
+                let json = JSON(value)
+                print(json)
+                print("########################## 리스폰스 성공 ##########################")
+                if !json["username"].arrayValue.isEmpty {
+                    Toast(text: "이미 존재하는 이메일 입니다").show()
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                }
+                
+            case .failure(let error):
+                print(error)
+                print("########################## 리스폰스 실패 ##########################")
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            }
+        }
+    }
+}
+// MARK: - uiCustom
+// 항상 마지막으로
+extension PemoJoinViewController {
+    func uiCustom() {
+        emailTextField.becomeFirstResponder()
+        emailTextField.setBottomBorder()
+        passwordTextField.setBottomBorder()
+        passwordConfirmTextField.setBottomBorder()
+        joinButton.layer.cornerRadius = 10
+        joinButton.layer.masksToBounds = true
     }
 }
