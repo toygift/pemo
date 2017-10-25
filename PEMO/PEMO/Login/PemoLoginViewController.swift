@@ -10,9 +10,11 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 import Toaster
+import LocalAuthentication
 
 class PemoLoginViewController: UIViewController {
 
+    var user: User = User()
     // MARK: - @IB
     //
     @IBOutlet var emailTextField: UITextField!
@@ -22,14 +24,25 @@ class PemoLoginViewController: UIViewController {
     
     @IBAction func login(_ sender: UIButton) {
         print("로그인")
-        guard let email = emailTextField.text, let password = passwordTextField.text else {
-            // guard 문이 거짓일경우 들어옴
-            return
-        }
-        self.login(email: email, password: password)
+        self.emailTextField.resignFirstResponder()
+        self.passwordTextField.resignFirstResponder()
         
-//        emailTextField.resignFirstResponder()
-//        passwordTextField.resignFirstResponder()
+        if self.emailCheck(withEmail: self.emailTextField.text!) == false || self.emailTextField.text == "" {
+            Toast(text: "Email을 확인해주세요").show()
+        } else if (self.passwordTextField.text?.count)! < 8 || self.passwordTextField.text == "" {
+            Toast(text: "password는 8자 이상입니다").show()
+        }
+        guard let email = self.emailTextField.text, let password = self.passwordTextField.text else { return }
+        self.loginWihtAlamo(email: email, password: password)
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        
+    }
+    // MARK: - 이메일정규식
+    //
+    func emailCheck(withEmail: String) -> Bool {
+        let emailFormat = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailFormat)
+        return emailPredicate.evaluate(with: withEmail)
     }
     @IBAction func loginFacebook(_ sender: UIButton) {
         
@@ -56,13 +69,6 @@ class PemoLoginViewController: UIViewController {
         passwordTextField.resignFirstResponder()
     }
 }
-// MARK: - Alamofire
-//
-extension PemoLoginViewController {
-    func login(email: String, password:String) {
-        
-    }
-}
 // MARK: - UITextFieldDelegate
 //
 extension PemoLoginViewController: UITextFieldDelegate {
@@ -73,6 +79,41 @@ extension PemoLoginViewController: UITextFieldDelegate {
             self.login(loginButton)
         }
         return true
+    }
+}
+// MARK: - 서버통신 (Alamofire)
+//
+extension PemoLoginViewController {
+    func loginWihtAlamo(email: String, password: String) {
+        let url = mainDomain + "login/"
+        let parameters: Parameters = ["username":email, "password":password]
+        let call = Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil)
+        call.responseJSON { (response) in
+            switch response.result {
+            case .success(let value):
+                let json = JSON(value)
+                print(json)
+                self.user = DataManager.shared.userList(response: json["user"])
+                let accessToken = json["token"].stringValue
+                let id = json["user"]["id"].stringValue
+                // KeyChain에 Token, id 저장
+                let tokenValue = TokenAuth()
+                tokenValue.save(serviceName, account: "accessToken", value: accessToken)
+                tokenValue.save(serviceName, account: "id", value: id)
+//                print(tokenValue.load(serviceName, account: "accessToken"))
+//                print(tokenValue.load(serviceName, account: "id"))
+                
+                guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIMAIN") else {
+                    print("아아아")
+                    return
+                }
+                self.present(nextViewController, animated: true, completion: nil)
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            case .failure(let error):
+                print(error)
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            }
+        }
     }
 }
 // MARK: - UI

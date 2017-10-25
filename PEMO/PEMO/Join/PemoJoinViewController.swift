@@ -39,7 +39,7 @@ class PemoJoinViewController: UIViewController {
 
         if (self.emailTextField.text?.isEmpty)! {
             Toast(text: "이메일을 입력해주세요").show()
-        } else if self.checkEmailFormat(enteredEmail: self.emailTextField.text!) == false {
+        } else if self.emailCheck(withEmail: self.emailTextField.text!) == false {
             Toast(text: "잘못된 이메일 형식입니다").show()
         } else if (passwordTextField.text?.count)! < 8 {
             Toast(text: "패스워드는 8자 이상입니다").show()
@@ -48,18 +48,17 @@ class PemoJoinViewController: UIViewController {
         } else if passwordTextField.text != passwordConfirmTextField.text {
             Toast(text: "패스워드를 확인해주세요").show()
         } else {
-            guard let email = self.emailTextField.text else { return }
-            guard let password = self.passwordTextField.text else { return }
+            guard let email = self.emailTextField.text, let password = self.passwordTextField.text else { return }
             self.joinWithAlamo(email: email, password: password, user_type: UserType.normal.rawValue)
             UIApplication.shared.isNetworkActivityIndicatorVisible = true
         }
     }
     // MARK: - 이메일정규식
     //
-    func checkEmailFormat(enteredEmail:String) -> Bool {
-        let emailFormat = "[식"
+    func emailCheck(withEmail: String) -> Bool {
+        let emailFormat = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailFormat)
-        return emailPredicate.evaluate(with: enteredEmail)
+        return emailPredicate.evaluate(with: withEmail)
     }
     
     @IBAction func popViewController(_ sender: UIButton) {
@@ -109,7 +108,7 @@ extension PemoJoinViewController {
     func joinWithAlamo(email: String, password: String, user_type:String) {
         print("########################## 알라모파이어 진입 ##########################")
         let url = mainDomain + "user/"
-        let parameters: Parameters = ["username":email, "password":password, "user_type": user_type]
+        let parameters: Parameters = ["username":email, "password":password, "user_type":user_type]
         
         let call = Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil)
         call.responseJSON { (response) in

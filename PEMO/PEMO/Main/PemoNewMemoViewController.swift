@@ -7,23 +7,33 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
 import KUIPopOver
 
 class PemoNewMemoViewController: UIViewController, KUIPopOverUsable {
 
+    @IBOutlet var inputTitleTextField: UITextField!
     @IBOutlet var inputTextView: UITextView!
     @IBOutlet var inputImageView: UIImageView!
-    
+    @IBAction func createMemo(_ sender: UIBarButtonItem) {
+        guard let title = self.inputTitleTextField.text, let content = self.inputTextView.text else { return }
+        
+        self.dismiss(animated: true) {
+            self.createMemoAlamo(title: title, content: content)
+        }
+    }
     // MARK: - KUIPopOver
     //
     var contentSize: CGSize {
-        return CGSize(width: 360.0, height: 600.0)
+        return CGSize(width: 300.0, height: 400.0)
     }
     // MARK: - LIFE CYCLE
     //
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        inputTitleTextField.becomeFirstResponder()
+        self.uiCustom()
         self.toolbar()
     }
     // MARK: - FUNC
@@ -32,22 +42,29 @@ class PemoNewMemoViewController: UIViewController, KUIPopOverUsable {
         // 툴바
         let toolbar = UIToolbar()
         toolbar.frame = CGRect(x: 0, y: 0, width: 0, height: 35)
-        toolbar.barTintColor = UIColor.white
+        toolbar.barTintColor = UIColor.piWhite
         self.inputTextView.inputAccessoryView = toolbar
-        // 버튼
+        // 카메라버튼
         let attachImage = UIBarButtonItem()
         attachImage.title = "IMAGE"
         attachImage.target = self
         attachImage.action = #selector(attachImageButton)
-        
+        // Done 버튼
+        let done = UIBarButtonItem()
+        done.title = "done"
+        done.target = self
+        done.action = #selector(keyboardDone)
         // flexSpace
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         //        let xxx = UIBarButtonItem()
         //        let yyy = UIImageView()
         //        xxx.image = self.inputImage.image
         //        xxx.customView?.addSubview(yyy)
-        toolbar.setItems([flexSpace, attachImage, flexSpace], animated: true)
+        toolbar.setItems([attachImage, flexSpace, done], animated: true)
         //self.view.endEdition(true)
+    }
+    @objc func keyboardDone() {
+        self.view.endEditing(true)
     }
     @objc func attachImageButton() {
         //        guard self.uinfo.account != nil else {
@@ -98,5 +115,28 @@ extension PemoNewMemoViewController: UIImagePickerControllerDelegate, UINavigati
         picker.dismiss(animated: true) {
             self.view.endEditing(true)
         }
+    }
+}
+extension PemoNewMemoViewController {
+    func createMemoAlamo(title: String, content: String, category_id: Int = 1) {
+        let url = mainDomain + "memo/"
+        let parameters: Parameters = ["title":title, "content":content,"category_id":category_id]
+        let tokenValue = TokenAuth()
+        let headers = tokenValue.getAuthHeaders()
+        let call = Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        call.responseJSON { (response) in
+            switch response.result {
+            case .success(let value):
+                let json = JSON(value)
+                print(json)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+}
+extension PemoNewMemoViewController {
+    func uiCustom() {
+        self.inputTitleTextField.setBottomBorder()
     }
 }

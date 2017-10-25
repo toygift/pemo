@@ -1,5 +1,5 @@
 //
-//  DataManager.swift
+//  MemoFolderData.swift
 //  PEMO
 //
 //  Created by Jaeseong on 2017. 10. 25..
@@ -7,5 +7,10 @@
 //
 
 import Foundation
-let mainDomain: String = "https://pemo.co.kr/api/"
-let serviceName: String = "co.kr.pemo.PEMO"
+import UIKit
+
+struct MemoFolderData {
+    var id: Int?
+    var title: String?
+    var memo: [MemoData]?
+}

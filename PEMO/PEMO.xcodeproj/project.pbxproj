@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		16259B12A8563915E7F5382C /* Pods_PEMO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F3B371CA6773E7A7317818 /* Pods_PEMO.framework */; };
+		3F7BBFB91FA08D9500624A04 /* MemoFolderData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7BBFB81FA08D9500624A04 /* MemoFolderData.swift */; };
+		3F7BBFBB1FA0956300624A04 /* PemoMainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7BBFBA1FA0956300624A04 /* PemoMainTableViewCell.swift */; };
+		3F7BBFBD1FA0D69100624A04 /* dddddTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7BBFBC1FA0D69100624A04 /* dddddTableViewCell.swift */; };
 		3FCC0DEF1F9F51230065070A /* PemoNewMemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FCC0DEE1F9F51230065070A /* PemoNewMemoViewController.swift */; };
 		3FCC0DF11F9F53900065070A /* PemoFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FCC0DF01F9F53900065070A /* PemoFolderViewController.swift */; };
 		3FCC0DF31F9F54AB0065070A /* ss.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3FCC0DF21F9F54AA0065070A /* ss.jpg */; };
@@ -20,10 +23,16 @@
 		3FD2B71F1F9DB4FD00204362 /* PemoLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD2B71E1F9DB4FD00204362 /* PemoLoginViewController.swift */; };
 		3FD2B7221F9DBF0400204362 /* PemoJoinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD2B7211F9DBF0400204362 /* PemoJoinViewController.swift */; };
 		3FD2B7251F9DD7E700204362 /* UICustom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD2B7241F9DD7E700204362 /* UICustom.swift */; };
+		3FE388681FA06340002A9B37 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE388671FA06340002A9B37 /* User.swift */; };
+		3FE3886A1FA068FB002A9B37 /* TokenAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE388691FA068FB002A9B37 /* TokenAuth.swift */; };
+		3FE3886D1FA08C98002A9B37 /* MemoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE3886C1FA08C98002A9B37 /* MemoData.swift */; };
 		3FFCD6FF1F9E16A500C435E1 /* PemoMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFCD6FE1F9E16A500C435E1 /* PemoMainViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3F7BBFB81FA08D9500624A04 /* MemoFolderData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoFolderData.swift; sourceTree = "<group>"; };
+		3F7BBFBA1FA0956300624A04 /* PemoMainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoMainTableViewCell.swift; sourceTree = "<group>"; };
+		3F7BBFBC1FA0D69100624A04 /* dddddTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dddddTableViewCell.swift; sourceTree = "<group>"; };
 		3FCC0DEE1F9F51230065070A /* PemoNewMemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoNewMemoViewController.swift; sourceTree = "<group>"; };
 		3FCC0DF01F9F53900065070A /* PemoFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoFolderViewController.swift; sourceTree = "<group>"; };
 		3FCC0DF21F9F54AA0065070A /* ss.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ss.jpg; sourceTree = "<group>"; };
@@ -38,6 +47,10 @@
 		3FD2B71E1F9DB4FD00204362 /* PemoLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoLoginViewController.swift; sourceTree = "<group>"; };
 		3FD2B7211F9DBF0400204362 /* PemoJoinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoJoinViewController.swift; sourceTree = "<group>"; };
 		3FD2B7241F9DD7E700204362 /* UICustom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICustom.swift; sourceTree = "<group>"; };
+		3FE388671FA06340002A9B37 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		3FE388691FA068FB002A9B37 /* TokenAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenAuth.swift; sourceTree = "<group>"; };
+		3FE3886B1FA06AA0002A9B37 /* PEMO.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PEMO.entitlements; sourceTree = "<group>"; };
+		3FE3886C1FA08C98002A9B37 /* MemoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoData.swift; sourceTree = "<group>"; };
 		3FFCD6FE1F9E16A500C435E1 /* PemoMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoMainViewController.swift; sourceTree = "<group>"; };
 		84F3B371CA6773E7A7317818 /* Pods_PEMO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PEMO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8D0827C7AE4587B52D46C0A /* Pods-PEMO.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PEMO.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PEMO/Pods-PEMO.debug.xcconfig"; sourceTree = "<group>"; };
@@ -77,9 +90,10 @@
 		3FD2B7081F9DB3E500204362 /* PEMO */ = {
 			isa = PBXGroup;
 			children = (
+				3FE3886B1FA06AA0002A9B37 /* PEMO.entitlements */,
 				3FD2B7091F9DB3E500204362 /* AppDelegate.swift */,
 				3FD2B70D1F9DB3E500204362 /* Main.storyboard */,
-				3FCC0DF41F9F94140065070A /* DataManager.swift */,
+				3F7BBFBC1FA0D69100624A04 /* dddddTableViewCell.swift */,
 				3FD2B7261F9DD9D500204362 /* Data */,
 				3FFCD7001F9E16A900C435E1 /* Main */,
 				3FD2B7201F9DB50300204362 /* Login */,
@@ -113,6 +127,11 @@
 			isa = PBXGroup;
 			children = (
 				3FD2B7241F9DD7E700204362 /* UICustom.swift */,
+				3FCC0DF41F9F94140065070A /* DataManager.swift */,
+				3FE388671FA06340002A9B37 /* User.swift */,
+				3FE388691FA068FB002A9B37 /* TokenAuth.swift */,
+				3FE3886C1FA08C98002A9B37 /* MemoData.swift */,
+				3F7BBFB81FA08D9500624A04 /* MemoFolderData.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -123,6 +142,7 @@
 				3FCC0DF01F9F53900065070A /* PemoFolderViewController.swift */,
 				3FFCD6FE1F9E16A500C435E1 /* PemoMainViewController.swift */,
 				3FCC0DEE1F9F51230065070A /* PemoNewMemoViewController.swift */,
+				3F7BBFBA1FA0956300624A04 /* PemoMainTableViewCell.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -180,6 +200,11 @@
 					3FD2B7051F9DB3E500204362 = {
 						CreatedOnToolsVersion = 9.0.1;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -281,13 +306,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				3FD2B70A1F9DB3E500204362 /* AppDelegate.swift in Sources */,
+				3FE3886A1FA068FB002A9B37 /* TokenAuth.swift in Sources */,
 				3FD2B7251F9DD7E700204362 /* UICustom.swift in Sources */,
+				3F7BBFBD1FA0D69100624A04 /* dddddTableViewCell.swift in Sources */,
 				3FD2B7121F9DB3E500204362 /* PEMO.xcdatamodeld in Sources */,
 				3FCC0DEF1F9F51230065070A /* PemoNewMemoViewController.swift in Sources */,
+				3F7BBFBB1FA0956300624A04 /* PemoMainTableViewCell.swift in Sources */,
+				3F7BBFB91FA08D9500624A04 /* MemoFolderData.swift in Sources */,
 				3FD2B71F1F9DB4FD00204362 /* PemoLoginViewController.swift in Sources */,
 				3FCC0DF11F9F53900065070A /* PemoFolderViewController.swift in Sources */,
 				3FFCD6FF1F9E16A500C435E1 /* PemoMainViewController.swift in Sources */,
 				3FCC0DF51F9F94140065070A /* DataManager.swift in Sources */,
+				3FE3886D1FA08C98002A9B37 /* MemoData.swift in Sources */,
+				3FE388681FA06340002A9B37 /* User.swift in Sources */,
 				3FD2B7221F9DBF0400204362 /* PemoJoinViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -426,6 +457,7 @@
 			baseConfigurationReference = B8D0827C7AE4587B52D46C0A /* Pods-PEMO.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PEMO/PEMO.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FNEH2787UY;
 				INFOPLIST_FILE = PEMO/Info.plist;
@@ -442,6 +474,7 @@
 			baseConfigurationReference = ED92B6C64577706295D74D60 /* Pods-PEMO.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PEMO/PEMO.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = FNEH2787UY;
 				INFOPLIST_FILE = PEMO/Info.plist;
