@@ -39,5 +39,10 @@ extension UIColor {
     @nonobjc class var piWarmGrey: UIColor {
         return UIColor(white: 155.0 / 255.0, alpha: 1.0)
     }
- 
+    @nonobjc class var piViolet: UIColor {
+        return UIColor(red: 189.0 / 255.0, green: 16.0 / 255.0, blue: 224.0 / 255.0, alpha: 1.0)
+    }
+    @nonobjc class var piPaleGrey: UIColor {
+        return UIColor(red: 239.0 / 255.0, green: 239.0 / 255.0, blue: 244.0 / 255.0, alpha: 1.0)
+    }
 }

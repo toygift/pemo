@@ -6,7 +6,7 @@ target 'PEMO' do
   pod 'Alamofire', '~> 4.5'
   pod 'SwiftyJSON', '4.0.0-alpha.1'
   pod 'Toaster', '~> 2.1'
-  pod 'KUIPopOver'
+
   
   use_frameworks!
 

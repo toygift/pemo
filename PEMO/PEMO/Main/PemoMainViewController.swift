@@ -9,19 +9,19 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
-import KUIPopOver
+
 
 class PemoMainViewController: UIViewController, UISearchBarDelegate {
 
     var memoDataList: [MemoData] = []
     var memoSearch: [MemoData] = []
+    let cellSpacingHeight: CGFloat = 10
     // MARK: - @IB
     //
     @IBOutlet var tableView: UITableView!
     @IBOutlet var topView: UIView!
     @IBOutlet var newMemoButton: UIButton!
     @IBOutlet var bottomView: UIView!
-    
     
     
     @IBAction func newMemo(_ sender: UIButton) {
@@ -56,31 +56,66 @@ class PemoMainViewController: UIViewController, UISearchBarDelegate {
         self.uiCustom()
         self.tableView.delaysContentTouches = false
         self.tableView.rowHeight = UITableViewAutomaticDimension
-        
+        self.tableView.backgroundColor = UIColor.piPaleGrey
     }
 }
 
 extension PemoMainViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
         return self.memoDataList.count
     }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let row: MemoData = self.memoDataList[indexPath.row]
-        let cellId = row.image == nil ? "memoCellWithImage" : "memoCell" // 서버에서 이미지구현시 앞뒤 바꿀것 
+        let section: MemoData = self.memoDataList[indexPath.section]
+        let cellId = section.image == nil ? "memoCellWithImage" : "memoCell" // 서버에서 이미지구현시 앞뒤 바꿀것
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? PemoMainTableViewCell
-        cell?.mainMemo = row
+        cell?.mainMemo = section
+        
         
         return cell!
     }
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return cellSpacingHeight
+    }
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let delete = UITableViewRowAction(style: .destructive, title: "Delete") { (action, indexPath) in
+            guard let id = self.memoDataList[indexPath.section].id else { return }
+            self.memoDataList.remove(at: indexPath.section)
+//            tableView.deleteRows(at: [indexPath], with: .fade)
+            let indexSet = IndexSet(arrayLiteral: indexPath.section)
+            tableView.deleteSections(indexSet, with: .fade)
+            self.delete(id: id)
+            // 알라모
+            UIApplication.shared.isNetworkActivityIndicatorVisible = true
+            
+        }
+        delete.backgroundColor = UIColor.piViolet
+        
+        return [delete]
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 1))
+        headerView.backgroundColor = UIColor.piPaleGrey
+        return headerView
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 65
+    }
 }
 
 
 
-
+// MARK: - Alamofire
 extension PemoMainViewController {
+    // 메모 불러오기
     func getMainMemo() {
         let url = mainDomain + "memo/"
         let tokenValue = TokenAuth()
@@ -93,11 +128,34 @@ extension PemoMainViewController {
                 print(json)
                 self.memoDataList = DataManager.shared.memoList(response: json)
                 self.tableView.reloadData()
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
                 print(self.memoDataList)
+                
             case .failure(let error):
                 print(error)
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
             }
         }
+    }
+    // 메모삭제
+    func delete(id: Int) {
+        let url = mainDomain + "memo/\(id)/"
+        let tokenValue = TokenAuth()
+        guard let headers = tokenValue.getAuthHeaders() else { return }
+        let call = Alamofire.request(url, method: .delete, parameters: nil, encoding: JSONEncoding.default, headers: headers)
+        call.responseJSON { (response) in
+            switch response.result {
+            case .success(let value):
+                let json = JSON(value)
+                print(json)
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            case .failure(let error):
+                print(error)
+                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            }
+        }
+        
+        
     }
 }
 

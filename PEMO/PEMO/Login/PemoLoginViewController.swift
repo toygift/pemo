@@ -85,7 +85,7 @@ extension PemoLoginViewController: UITextFieldDelegate {
 //
 extension PemoLoginViewController {
     func loginWihtAlamo(email: String, password: String) {
-        let url = mainDomain + "login/"
+        let url = mainDomain + "user/login/"
         let parameters: Parameters = ["username":email, "password":password]
         let call = Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil)
         call.responseJSON { (response) in
@@ -93,21 +93,26 @@ extension PemoLoginViewController {
             case .success(let value):
                 let json = JSON(value)
                 print(json)
-                self.user = DataManager.shared.userList(response: json["user"])
-                let accessToken = json["token"].stringValue
-                let id = json["user"]["id"].stringValue
-                // KeyChain에 Token, id 저장
-                let tokenValue = TokenAuth()
-                tokenValue.save(serviceName, account: "accessToken", value: accessToken)
-                tokenValue.save(serviceName, account: "id", value: id)
-//                print(tokenValue.load(serviceName, account: "accessToken"))
-//                print(tokenValue.load(serviceName, account: "id"))
-                
-                guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIMAIN") else {
-                    print("아아아")
-                    return
+                if !(json["detail"].stringValue.isEmpty) {
+                    Toast(text: "이메일 혹은 비밀번호를 확인해 주세요").show()
+                } else {
+                    self.user = DataManager.shared.userList(response: json["user"])
+                    let accessToken = json["token"].stringValue
+                    let id = json["user"]["id"].stringValue
+                    // KeyChain에 Token, id 저장
+                    let tokenValue = TokenAuth()
+                    tokenValue.save(serviceName, account: "accessToken", value: accessToken)
+                    tokenValue.save(serviceName, account: "id", value: id)
+                    //                print(tokenValue.load(serviceName, account: "accessToken"))
+                    //                print(tokenValue.load(serviceName, account: "id"))
+                    
+                    guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIMAIN") else {
+                        print("아아아")
+                        return
+                    }
+                    self.present(nextViewController, animated: true, completion: nil)
                 }
-                self.present(nextViewController, animated: true, completion: nil)
+                
                 UIApplication.shared.isNetworkActivityIndicatorVisible = false
             case .failure(let error):
                 print(error)

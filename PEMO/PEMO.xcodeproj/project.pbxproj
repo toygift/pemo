@@ -10,7 +10,6 @@
 		16259B12A8563915E7F5382C /* Pods_PEMO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F3B371CA6773E7A7317818 /* Pods_PEMO.framework */; };
 		3F7BBFB91FA08D9500624A04 /* MemoFolderData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7BBFB81FA08D9500624A04 /* MemoFolderData.swift */; };
 		3F7BBFBB1FA0956300624A04 /* PemoMainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7BBFBA1FA0956300624A04 /* PemoMainTableViewCell.swift */; };
-		3F7BBFBD1FA0D69100624A04 /* dddddTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7BBFBC1FA0D69100624A04 /* dddddTableViewCell.swift */; };
 		3FCC0DEF1F9F51230065070A /* PemoNewMemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FCC0DEE1F9F51230065070A /* PemoNewMemoViewController.swift */; };
 		3FCC0DF11F9F53900065070A /* PemoFolderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FCC0DF01F9F53900065070A /* PemoFolderViewController.swift */; };
 		3FCC0DF31F9F54AB0065070A /* ss.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3FCC0DF21F9F54AA0065070A /* ss.jpg */; };
@@ -32,7 +31,6 @@
 /* Begin PBXFileReference section */
 		3F7BBFB81FA08D9500624A04 /* MemoFolderData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoFolderData.swift; sourceTree = "<group>"; };
 		3F7BBFBA1FA0956300624A04 /* PemoMainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoMainTableViewCell.swift; sourceTree = "<group>"; };
-		3F7BBFBC1FA0D69100624A04 /* dddddTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dddddTableViewCell.swift; sourceTree = "<group>"; };
 		3FCC0DEE1F9F51230065070A /* PemoNewMemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoNewMemoViewController.swift; sourceTree = "<group>"; };
 		3FCC0DF01F9F53900065070A /* PemoFolderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoFolderViewController.swift; sourceTree = "<group>"; };
 		3FCC0DF21F9F54AA0065070A /* ss.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ss.jpg; sourceTree = "<group>"; };
@@ -93,7 +91,6 @@
 				3FE3886B1FA06AA0002A9B37 /* PEMO.entitlements */,
 				3FD2B7091F9DB3E500204362 /* AppDelegate.swift */,
 				3FD2B70D1F9DB3E500204362 /* Main.storyboard */,
-				3F7BBFBC1FA0D69100624A04 /* dddddTableViewCell.swift */,
 				3FD2B7261F9DD9D500204362 /* Data */,
 				3FFCD7001F9E16A900C435E1 /* Main */,
 				3FD2B7201F9DB50300204362 /* Login */,
@@ -267,14 +264,12 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-PEMO/Pods-PEMO-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/KUIPopOver/KUIPopOver.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/Toaster/Toaster.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KUIPopOver.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Toaster.framework",
 			);
@@ -308,7 +303,6 @@
 				3FD2B70A1F9DB3E500204362 /* AppDelegate.swift in Sources */,
 				3FE3886A1FA068FB002A9B37 /* TokenAuth.swift in Sources */,
 				3FD2B7251F9DD7E700204362 /* UICustom.swift in Sources */,
-				3F7BBFBD1FA0D69100624A04 /* dddddTableViewCell.swift in Sources */,
 				3FD2B7121F9DB3E500204362 /* PEMO.xcdatamodeld in Sources */,
 				3FCC0DEF1F9F51230065070A /* PemoNewMemoViewController.swift in Sources */,
 				3F7BBFBB1FA0956300624A04 /* PemoMainTableViewCell.swift in Sources */,

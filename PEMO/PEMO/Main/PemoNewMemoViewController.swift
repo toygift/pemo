@@ -9,9 +9,9 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
-import KUIPopOver
 
-class PemoNewMemoViewController: UIViewController, KUIPopOverUsable {
+
+class PemoNewMemoViewController: UIViewController {
 
     @IBOutlet var inputTitleTextField: UITextField!
     @IBOutlet var inputTextView: UITextView!
@@ -23,11 +23,7 @@ class PemoNewMemoViewController: UIViewController, KUIPopOverUsable {
             self.createMemoAlamo(title: title, content: content)
         }
     }
-    // MARK: - KUIPopOver
-    //
-    var contentSize: CGSize {
-        return CGSize(width: 300.0, height: 400.0)
-    }
+
     // MARK: - LIFE CYCLE
     //
     override func viewDidLoad() {

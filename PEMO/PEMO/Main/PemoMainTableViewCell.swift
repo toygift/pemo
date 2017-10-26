@@ -15,20 +15,34 @@ class PemoMainTableViewCell: UITableViewCell {
     @IBOutlet var contents: UILabel!
     @IBOutlet var img: UIImageView!
     
+    
     var mainMemo: PEMO.MemoData? { didSet { updateUI()}}
     override func awakeFromNib() {
         super.awakeFromNib()
         
+        self.uiCustom()
+       
+    }
+}
+
+extension PemoMainTableViewCell {
+    // 테이블뷰 uiCustom
+    func uiCustom() {
         self.cellView.layer.cornerRadius = 7
         self.cellView.layer.borderWidth = 1
         self.cellView.layer.borderColor = UIColor.lightGray.cgColor
-       
+//        self.contentCellView.layer.cornerRadius = 7
+//        self.contentCellView.layer.borderWidth = 1
+//        self.contentCellView.layer.borderColor = UIColor.lightGray.cgColor
+        
+        
+        
     }
-    
+    // 테이블뷰 셀에 내용 표시
     func updateUI() {
         self.title.text = mainMemo?.title
         self.contents.text = mainMemo?.content
-        
+        // 이미지
         DispatchQueue.global().async {
             guard let path = self.mainMemo?.image else { return }
             if let imageURL = URL(string: path) {
@@ -42,6 +56,4 @@ class PemoMainTableViewCell: UITableViewCell {
             }
         }
     }
-    
-    
 }
