@@ -36,6 +36,7 @@ class PemoMainViewController: UIViewController, UISearchBarDelegate {
         self.navigationItem.titleView = searchBar
         searchBar.delegate = self
         searchBar.placeholder = "검색"
+        searchBar.sizeToFit()
         searchBar.becomeFirstResponder()
         searchBar.showsCancelButton = true
         searchBar.enablesReturnKeyAutomatically = false
@@ -44,10 +45,11 @@ class PemoMainViewController: UIViewController, UISearchBarDelegate {
         self.tableView.reloadData()
     }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.navigationItem.titleView = nil
         searchBar.resignFirstResponder()
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
+        self.navigationItem.titleView = nil
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +57,7 @@ class PemoMainViewController: UIViewController, UISearchBarDelegate {
         self.getMainMemo()
         self.uiCustom()
         self.tableView.delaysContentTouches = false
-        self.tableView.rowHeight = UITableViewAutomaticDimension
+//        self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.backgroundColor = UIColor.piPaleGrey
     }
 }
@@ -70,16 +72,16 @@ extension PemoMainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section: MemoData = self.memoDataList[indexPath.section]
-        let cellId = section.image == nil ? "memoCellWithImage" : "memoCell" // 서버에서 이미지구현시 앞뒤 바꿀것
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? PemoMainTableViewCell
+//        let cellId = section.image == nil ? "memoCellWithImage" : "memoCell" // 서버에서 이미지구현시 앞뒤 바꿀것
+        let cell = tableView.dequeueReusableCell(withIdentifier: "memoCell") as? PemoMainTableViewCell
         cell?.mainMemo = section
-        
-        
+//        cell?.title.text = self.memoDataList[indexPath.section].title
+//        cell?.title.text = self.memoDataList[indexPath.row].title
         return cell!
     }
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
-    }
+//    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return UITableViewAutomaticDimension
+//    }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return cellSpacingHeight
@@ -129,7 +131,7 @@ extension PemoMainViewController {
                 self.memoDataList = DataManager.shared.memoList(response: json)
                 self.tableView.reloadData()
                 UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                print(self.memoDataList)
+                print("가나다라마마마",self.memoDataList)
                 
             case .failure(let error):
                 print(error)
