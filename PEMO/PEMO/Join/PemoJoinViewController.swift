@@ -111,20 +111,21 @@ extension PemoJoinViewController {
         let parameters: Parameters = ["username":email, "password":password, "user_type":user_type]
         
         let call = Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil)
-        call.responseJSON { (response) in
+        call.validate().responseJSON { (response) in
             switch response.result {
             case .success(let value):
                 let json = JSON(value)
                 print(json)
                 print("########################## 리스폰스 성공 ##########################")
-                if !json["username"].arrayValue.isEmpty {
-                    Toast(text: "이미 존재하는 이메일 입니다").show()
-                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
-                }
+//                if !json["username"].arrayValue.isEmpty {
+//                    Toast(text: "이미 존재하는 이메일 입니다").show()
+//                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+//                }
                 
             case .failure(let error):
                 print(error)
                 print("########################## 리스폰스 실패 ##########################")
+                Toast(text: "이미 존재하는 이메일 입니다").show()
                 UIApplication.shared.isNetworkActivityIndicatorVisible = false
             }
         }

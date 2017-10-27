@@ -8,6 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		16259B12A8563915E7F5382C /* Pods_PEMO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84F3B371CA6773E7A7317818 /* Pods_PEMO.framework */; };
+		3F4B21231FA35EE200095A54 /* PemoFolderCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4B21221FA35EE200095A54 /* PemoFolderCollectionViewCell.swift */; };
+		3F4B21251FA35F7000095A54 /* PemoFolderCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4B21241FA35F7000095A54 /* PemoFolderCollectionViewController.swift */; };
+		3F4F8F211FA36C41004F3F7A /* HalfModalPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4F8F201FA36C40004F3F7A /* HalfModalPresentationController.swift */; };
+		3F4F8F251FA36D10004F3F7A /* HalfModalTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4F8F221FA36D0F004F3F7A /* HalfModalTransitioningDelegate.swift */; };
+		3F4F8F261FA36D10004F3F7A /* HalfModalTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4F8F231FA36D0F004F3F7A /* HalfModalTransitionAnimator.swift */; };
+		3F4F8F271FA36D10004F3F7A /* HalfModalInteractiveTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4F8F241FA36D10004F3F7A /* HalfModalInteractiveTransition.swift */; };
+		3F4F8F2A1FA36D8A004F3F7A /* AppNavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4F8F291FA36D8A004F3F7A /* AppNavController.swift */; };
 		3F7BBFB91FA08D9500624A04 /* MemoFolderData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7BBFB81FA08D9500624A04 /* MemoFolderData.swift */; };
 		3F7BBFBB1FA0956300624A04 /* PemoMainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7BBFBA1FA0956300624A04 /* PemoMainTableViewCell.swift */; };
 		3FCC0DEF1F9F51230065070A /* PemoNewMemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FCC0DEE1F9F51230065070A /* PemoNewMemoViewController.swift */; };
@@ -29,6 +36,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3F4B21221FA35EE200095A54 /* PemoFolderCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoFolderCollectionViewCell.swift; sourceTree = "<group>"; };
+		3F4B21241FA35F7000095A54 /* PemoFolderCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoFolderCollectionViewController.swift; sourceTree = "<group>"; };
+		3F4F8F201FA36C40004F3F7A /* HalfModalPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HalfModalPresentationController.swift; sourceTree = "<group>"; };
+		3F4F8F221FA36D0F004F3F7A /* HalfModalTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HalfModalTransitioningDelegate.swift; sourceTree = "<group>"; };
+		3F4F8F231FA36D0F004F3F7A /* HalfModalTransitionAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HalfModalTransitionAnimator.swift; sourceTree = "<group>"; };
+		3F4F8F241FA36D10004F3F7A /* HalfModalInteractiveTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HalfModalInteractiveTransition.swift; sourceTree = "<group>"; };
+		3F4F8F291FA36D8A004F3F7A /* AppNavController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppNavController.swift; sourceTree = "<group>"; };
 		3F7BBFB81FA08D9500624A04 /* MemoFolderData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoFolderData.swift; sourceTree = "<group>"; };
 		3F7BBFBA1FA0956300624A04 /* PemoMainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoMainTableViewCell.swift; sourceTree = "<group>"; };
 		3FCC0DEE1F9F51230065070A /* PemoNewMemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoNewMemoViewController.swift; sourceTree = "<group>"; };
@@ -67,6 +81,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3F4F8F281FA36D14004F3F7A /* HalfModal */ = {
+			isa = PBXGroup;
+			children = (
+				3F4F8F291FA36D8A004F3F7A /* AppNavController.swift */,
+				3F4F8F201FA36C40004F3F7A /* HalfModalPresentationController.swift */,
+				3F4F8F241FA36D10004F3F7A /* HalfModalInteractiveTransition.swift */,
+				3F4F8F231FA36D0F004F3F7A /* HalfModalTransitionAnimator.swift */,
+				3F4F8F221FA36D0F004F3F7A /* HalfModalTransitioningDelegate.swift */,
+			);
+			path = HalfModal;
+			sourceTree = "<group>";
+		};
 		3FD2B6FD1F9DB3E500204362 = {
 			isa = PBXGroup;
 			children = (
@@ -123,6 +149,7 @@
 		3FD2B7261F9DD9D500204362 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				3F4F8F281FA36D14004F3F7A /* HalfModal */,
 				3FD2B7241F9DD7E700204362 /* UICustom.swift */,
 				3FCC0DF41F9F94140065070A /* DataManager.swift */,
 				3FE388671FA06340002A9B37 /* User.swift */,
@@ -136,6 +163,8 @@
 		3FFCD7001F9E16A900C435E1 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				3F4B21221FA35EE200095A54 /* PemoFolderCollectionViewCell.swift */,
+				3F4B21241FA35F7000095A54 /* PemoFolderCollectionViewController.swift */,
 				3FCC0DF01F9F53900065070A /* PemoFolderViewController.swift */,
 				3FFCD6FE1F9E16A500C435E1 /* PemoMainViewController.swift */,
 				3FCC0DEE1F9F51230065070A /* PemoNewMemoViewController.swift */,
@@ -304,16 +333,23 @@
 				3FE3886A1FA068FB002A9B37 /* TokenAuth.swift in Sources */,
 				3FD2B7251F9DD7E700204362 /* UICustom.swift in Sources */,
 				3FD2B7121F9DB3E500204362 /* PEMO.xcdatamodeld in Sources */,
+				3F4F8F211FA36C41004F3F7A /* HalfModalPresentationController.swift in Sources */,
 				3FCC0DEF1F9F51230065070A /* PemoNewMemoViewController.swift in Sources */,
 				3F7BBFBB1FA0956300624A04 /* PemoMainTableViewCell.swift in Sources */,
 				3F7BBFB91FA08D9500624A04 /* MemoFolderData.swift in Sources */,
+				3F4F8F2A1FA36D8A004F3F7A /* AppNavController.swift in Sources */,
 				3FD2B71F1F9DB4FD00204362 /* PemoLoginViewController.swift in Sources */,
 				3FCC0DF11F9F53900065070A /* PemoFolderViewController.swift in Sources */,
 				3FFCD6FF1F9E16A500C435E1 /* PemoMainViewController.swift in Sources */,
+				3F4F8F251FA36D10004F3F7A /* HalfModalTransitioningDelegate.swift in Sources */,
 				3FCC0DF51F9F94140065070A /* DataManager.swift in Sources */,
+				3F4B21251FA35F7000095A54 /* PemoFolderCollectionViewController.swift in Sources */,
 				3FE3886D1FA08C98002A9B37 /* MemoData.swift in Sources */,
 				3FE388681FA06340002A9B37 /* User.swift in Sources */,
+				3F4F8F271FA36D10004F3F7A /* HalfModalInteractiveTransition.swift in Sources */,
 				3FD2B7221F9DBF0400204362 /* PemoJoinViewController.swift in Sources */,
+				3F4B21231FA35EE200095A54 /* PemoFolderCollectionViewCell.swift in Sources */,
+				3F4F8F261FA36D10004F3F7A /* HalfModalTransitionAnimator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,5 +12,5 @@ import UIKit
 struct MemoFolderData {
     var id: Int?
     var title: String?
-    var memo: [MemoData]?
+//    var memo: [MemoData]?
 }

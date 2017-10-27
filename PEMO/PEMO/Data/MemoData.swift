@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+
 struct MemoData {
     var id: Int?
     var title: String?

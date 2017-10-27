@@ -9,8 +9,11 @@
 import Foundation
 import SwiftyJSON
 
+
 let mainDomain: String = "https://pemo.co.kr/api/"
 let serviceName: String = "co.kr.pemo.PEMO"
+
+
 
 class DataManager {
     static let shared: DataManager = DataManager()
@@ -31,9 +34,18 @@ class DataManager {
                                  content: json["content"].stringValue,
                                  image: json["image"].stringValue,
                                  category_id: json["category_id"].intValue)
+                                 
             return value
         }
-        
+        return memo
+    }
+    func folderList(response json: JSON) -> [MemoFolderData] {
+        let memo: [MemoFolderData] = json.arrayValue.map { (json) -> MemoFolderData in
+            let value = MemoFolderData(id: json["id"].intValue,
+                                       title: json["title"].stringValue)
+            
+            return value
+        }
         return memo
     }
 }

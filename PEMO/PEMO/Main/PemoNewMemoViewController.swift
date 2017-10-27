@@ -12,25 +12,33 @@ import SwiftyJSON
 
 
 class PemoNewMemoViewController: UIViewController {
-
+    
+    var navigationItemTitle: String?
+    var navigationItemTitleChange: String?
+    var textViewContents: String?
+    
     @IBOutlet var inputTitleTextField: UITextField!
     @IBOutlet var inputTextView: UITextView!
     @IBOutlet var inputImageView: UIImageView!
-    @IBAction func createMemo(_ sender: UIBarButtonItem) {
+    //메모수정 API적용해야함
+    @IBAction func editMemo(_ sender: UIBarButtonItem) {
         guard let title = self.inputTitleTextField.text, let content = self.inputTextView.text else { return }
-        
-        self.dismiss(animated: true) {
-            self.createMemoAlamo(title: title, content: content)
-        }
+        self.createMemoAlamo(title: title, content: content)
+        self.navigationController?.popViewController(animated: true)
     }
-
+    
     // MARK: - LIFE CYCLE
     //
     override func viewDidLoad() {
         super.viewDidLoad()
         inputTitleTextField.becomeFirstResponder()
+        self.navigationItem.title = self.navigationItemTitle
+        self.inputTitleTextField.text = self.navigationItemTitle
+        self.inputTextView.text = self.textViewContents
         self.uiCustom()
         self.toolbar()
+        self.inputTitleTextField.delegate = self
+        self.inputTextView.delegate = self
     }
     // MARK: - FUNC
     //
@@ -52,12 +60,7 @@ class PemoNewMemoViewController: UIViewController {
         done.action = #selector(keyboardDone)
         // flexSpace
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        //        let xxx = UIBarButtonItem()
-        //        let yyy = UIImageView()
-        //        xxx.image = self.inputImage.image
-        //        xxx.customView?.addSubview(yyy)
         toolbar.setItems([attachImage, flexSpace, done], animated: true)
-        //self.view.endEdition(true)
     }
     @objc func keyboardDone() {
         self.view.endEditing(true)
@@ -113,6 +116,28 @@ extension PemoNewMemoViewController: UIImagePickerControllerDelegate, UINavigati
         }
     }
 }
+
+extension PemoNewMemoViewController: UITextViewDelegate, UITextFieldDelegate {
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let contents = textField.text! as NSString
+        let length = ((contents.length > 15) ? 15 : contents.length)
+        self.navigationItemTitleChange = contents.substring(with: NSRange(location: 0, length: length))
+        self.navigationItem.title = navigationItemTitleChange
+        return true
+    }
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let bar = self.navigationController?.navigationBar
+        let ts = TimeInterval(0.1)
+        UIView.animate(withDuration: ts) {
+            bar?.alpha = (bar?.alpha == 0 ? 1 : 0)
+        }
+    }
+
+}
+
+// MARK: - Alamofire
+//
 extension PemoNewMemoViewController {
     func createMemoAlamo(title: String, content: String, category_id: Int = 1) {
         let url = mainDomain + "memo/"
@@ -125,6 +150,7 @@ extension PemoNewMemoViewController {
             case .success(let value):
                 let json = JSON(value)
                 print(json)
+                
             case .failure(let error):
                 print(error)
             }

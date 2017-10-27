@@ -88,14 +88,14 @@ extension PemoLoginViewController {
         let url = mainDomain + "user/login/"
         let parameters: Parameters = ["username":email, "password":password]
         let call = Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil)
-        call.responseJSON { (response) in
+        call.validate().responseJSON { (response) in
             switch response.result {
             case .success(let value):
                 let json = JSON(value)
                 print(json)
-                if !(json["detail"].stringValue.isEmpty) {
-                    Toast(text: "이메일 혹은 비밀번호를 확인해 주세요").show()
-                } else {
+//                if !(json["detail"].stringValue.isEmpty) {
+//                    Toast(text: "이메일 혹은 비밀번호를 확인해 주세요").show()
+//                } else {
                     self.user = DataManager.shared.userList(response: json["user"])
                     let accessToken = json["token"].stringValue
                     let id = json["user"]["id"].stringValue
@@ -106,16 +106,15 @@ extension PemoLoginViewController {
                     //                print(tokenValue.load(serviceName, account: "accessToken"))
                     //                print(tokenValue.load(serviceName, account: "id"))
                     
-                    guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIMAIN") else {
-                        print("아아아")
-                        return
-                    }
+                    guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIMAIN") else { return }
+                   
                     self.present(nextViewController, animated: true, completion: nil)
-                }
+//                }
                 
                 UIApplication.shared.isNetworkActivityIndicatorVisible = false
             case .failure(let error):
                 print(error)
+                Toast(text: "이메일 혹은 비밀번호를 확인해주세요").show()
                 UIApplication.shared.isNetworkActivityIndicatorVisible = false
             }
         }
