@@ -13,3 +13,6 @@
 
 ### 프로젝트 진행 스크럼 보드
 구글독스   :   https://goo.gl/d1PSDM
+
+### 프로젝트 API 문서 주소
+깃북   :   https://goo.gl/a3FWPb
