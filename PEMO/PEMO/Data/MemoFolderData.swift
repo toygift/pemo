@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-struct MemoFolderData {
+class MemoFolderData {
     var id: Int?
     var title: String?
 //    var memo: [MemoData]?

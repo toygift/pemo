@@ -10,20 +10,60 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 
+enum WriteType {
+    case new
+    case edit
+}
 
 class PemoNewMemoViewController: UIViewController {
     
-    var navigationItemTitle: String?
-    var navigationItemTitleChange: String?
-    var textViewContents: String?
+    var subject: String? // 실시간 제목
+    lazy var memoDao = MemoDAO()
+    
+    var memoTransfer: MemoData?
+    var writeType: WriteType = .new
     
     @IBOutlet var inputTitleTextField: UITextField!
     @IBOutlet var inputTextView: UITextView!
     @IBOutlet var inputImageView: UIImageView!
-    //메모수정 API적용해야함
+    @IBAction func cancelWrite(_ sender: UIBarButtonItem) {
+        self.navigationController?.popViewController(animated: true)
+    }
     @IBAction func editMemo(_ sender: UIBarButtonItem) {
-        guard let title = self.inputTitleTextField.text, let content = self.inputTextView.text else { return }
-        self.createMemoAlamo(title: title, content: content)
+        switch self.writeType {
+        case .new:
+            let data = MemoData()
+//            data.id = 
+            data.title = self.subject
+            data.content = self.inputTextView.text
+//            data.image =
+
+//            data.created_date = Date()
+//            data.modified_date = Date()
+            self.memoDao.insert(data)
+//            guard let title = self.subject, let content = self.inputTextView.text else {
+//                print("가드렛")
+//                return
+//            }
+//            self.writeMemoAlamo(title: title, content: content, method: .post)
+        case .edit:
+            let data = MemoData()
+            data.title = self.subject
+            data.content = self.inputTextView.text
+            //            data.image =
+//            data.created_date = Date()
+//            data.modified_date = Date()
+
+            self.memoDao.insert(data)
+//            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//            appDelegate.memoDataList.append(data)
+//            print("EDITEDIT")
+//            guard let title = self.memoTransfer?.title, let content = self.inputTextView.text else {
+//                print("가드렛")
+//                return
+//            }
+//            self.writeMemoAlamo(title: title, content: content, method: .post)//patch로 바꾸기
+        }
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -31,14 +71,20 @@ class PemoNewMemoViewController: UIViewController {
     //
     override func viewDidLoad() {
         super.viewDidLoad()
-        inputTitleTextField.becomeFirstResponder()
-        self.navigationItem.title = self.navigationItemTitle
-        self.inputTitleTextField.text = self.navigationItemTitle
-        self.inputTextView.text = self.textViewContents
         self.uiCustom()
         self.toolbar()
-        self.inputTitleTextField.delegate = self
         self.inputTextView.delegate = self
+        
+        switch self.writeType {
+        case .new:
+            inputTextView.text = "WRITING..."
+            inputTextView.textColor = .lightGray
+        case .edit:
+            self.navigationItem.title = self.memoTransfer?.title
+            self.inputTextView.text = self.memoTransfer?.content
+        }
+
+        
     }
     // MARK: - FUNC
     //
@@ -50,12 +96,14 @@ class PemoNewMemoViewController: UIViewController {
         self.inputTextView.inputAccessoryView = toolbar
         // 카메라버튼
         let attachImage = UIBarButtonItem()
-        attachImage.title = "IMAGE"
+        attachImage.image = UIImage(named: "instagram.png")
+//        attachImage.tintColor = UIColor.clear
         attachImage.target = self
         attachImage.action = #selector(attachImageButton)
         // Done 버튼
         let done = UIBarButtonItem()
-        done.title = "done"
+        done.image = UIImage(named: "check.png")
+//        done.tintColor = UIColor.clear
         done.target = self
         done.action = #selector(keyboardDone)
         // flexSpace
@@ -109,42 +157,59 @@ extension PemoNewMemoViewController: UIImagePickerControllerDelegate, UINavigati
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let img = info[UIImagePickerControllerEditedImage] as? UIImage {
             self.inputImageView.image = img
-            
         }
         picker.dismiss(animated: true) {
             self.view.endEditing(true)
         }
     }
 }
-
-extension PemoNewMemoViewController: UITextViewDelegate, UITextFieldDelegate {
-
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let contents = textField.text! as NSString
+// MARK: - UITextViewDelegate
+//
+extension PemoNewMemoViewController: UITextViewDelegate {
+    // 텍스트뷰의 첫 15자를 메모의 title로 함
+    // 텍스트뷰의 첫 15자가 해당 뷰의 네비게이션바 타이틀로 표시됨
+    func textViewDidChange(_ textView: UITextView) {
+        let contents = textView.text as NSString
         let length = ((contents.length > 15) ? 15 : contents.length)
-        self.navigationItemTitleChange = contents.substring(with: NSRange(location: 0, length: length))
-        self.navigationItem.title = navigationItemTitleChange
-        return true
+        self.subject = contents.substring(with: NSRange(location: 0, length: length))
+        self.navigationItem.title = subject
     }
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let bar = self.navigationController?.navigationBar
-        let ts = TimeInterval(0.1)
-        UIView.animate(withDuration: ts) {
-            bar?.alpha = (bar?.alpha == 0 ? 1 : 0)
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        switch self.writeType {
+        case .new:
+            if textView.text == "WRITING..." {
+                textView.text = ""
+                textView.textColor = UIColor.black
+            }
+            textView.becomeFirstResponder()
+        default:
+            print("통과")
         }
     }
-
+    func textViewDidEndEditing(_ textView: UITextView) {
+        switch self.writeType {
+        case .new:
+            if textView.text == "" {
+                textView.text =  "WRITING..."
+                textView.textColor = UIColor.lightGray
+            }
+            textView.resignFirstResponder()
+        default:
+            print("통과")
+        }
+    }
 }
 
 // MARK: - Alamofire
 //
 extension PemoNewMemoViewController {
-    func createMemoAlamo(title: String, content: String, category_id: Int = 1) {
+    func writeMemoAlamo(title: String, content: String, method: HTTPMethod, category_id: Int = 1) {
+        print("알라모")
         let url = mainDomain + "memo/"
         let parameters: Parameters = ["title":title, "content":content,"category_id":category_id]
         let tokenValue = TokenAuth()
         let headers = tokenValue.getAuthHeaders()
-        let call = Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        let call = Alamofire.request(url, method: method, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
         call.responseJSON { (response) in
             switch response.result {
             case .success(let value):
@@ -159,6 +224,6 @@ extension PemoNewMemoViewController {
 }
 extension PemoNewMemoViewController {
     func uiCustom() {
-        self.inputTitleTextField.setBottomBorder()
+        self.inputTextView.layer.cornerRadius = 5
     }
 }

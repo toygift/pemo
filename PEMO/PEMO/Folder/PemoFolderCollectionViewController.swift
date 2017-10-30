@@ -31,7 +31,7 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.getFolder()
+//        self.getFolder()
         let textfield = UITextField(frame: CGRect(x: 0, y: 0, width: 230, height: 24))
         textfield.placeholder = "폴더이름"
 //        textfield.layer.cornerRadius = 1
@@ -100,23 +100,24 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
     */
 
 }
-extension PemoFolderCollectionViewController {
-    func getFolder() {
-        let url = mainDomain + "category/"
-        let tokenValue = TokenAuth()
-        guard let headers = tokenValue.getAuthHeaders() else { return }
-        let call = Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers)
-        call.responseJSON { (response) in
-            switch response.result {
-            case .success(let value):
-                let json = JSON(value)
-                print(json)
-                self.memoFolderList = DataManager.shared.folderList(response: json)
-                print("메모폴더리스트",self.memoFolderList)
-                self.collectionView?.reloadData()
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-}
+//extension PemoFolderCollectionViewController {
+//    func getFolder() {
+//        let url = mainDomain + "category/"
+//        let tokenValue = TokenAuth()
+//        guard let headers = tokenValue.getAuthHeaders() else { return }
+//        let call = Alamofire.request(url, method: .get, parameters: nil, encoding: JSONEncoding.default, headers: headers)
+//        call.responseJSON { (response) in
+//            switch response.result {
+//            case .success(let value):
+//                let json = JSON(value)
+//                print(json)
+//                self.memoFolderList = DataManager.shared.folderList(response: json)
+//                print("메모폴더리스트",self.memoFolderList)
+//                self.collectionView?.reloadData()
+//            case .failure(let error):
+//                print(error)
+//            }
+//        }
+//    }
+//}
+

@@ -13,7 +13,7 @@ import Toaster
 import LocalAuthentication
 
 class PemoLoginViewController: UIViewController {
-
+    
     var user: User = User()
     // MARK: - @IB
     //
@@ -33,8 +33,18 @@ class PemoLoginViewController: UIViewController {
             Toast(text: "password는 8자 이상입니다").show()
         }
         guard let email = self.emailTextField.text, let password = self.passwordTextField.text else { return }
-        self.loginWihtAlamo(email: email, password: password)
-        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        self.loginWihtAlamo(email: email, password: password, success:  {
+            let sync = DataSync()
+            DispatchQueue.main.async {
+                print("다운로드")
+                sync.memoDownload()
+            }
+            DispatchQueue.main.async {
+                print("업로드")
+                sync.memoUpload()
+            }
+        })
+//        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         
     }
     // MARK: - 이메일정규식
@@ -59,16 +69,24 @@ class PemoLoginViewController: UIViewController {
         self.uiCustom()
         self.emailTextField.delegate = self
         self.passwordTextField.delegate = self
-//        navigationController?.navigationBar.isHidden = true
+        //        navigationController?.navigationBar.isHidden = true
+        let tokenValue = TokenAuth()
+        print(" 뷰디드로드",tokenValue.load(serviceName, account: "accessToken"))
+        print(" 뷰디드로드",tokenValue.load(serviceName, account: "id"))
+        
     }
     override func viewWillAppear(_ animated: Bool) {
         self.emailTextField.becomeFirstResponder()
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         emailTextField.resignFirstResponder()
         passwordTextField.resignFirstResponder()
     }
 }
+
 // MARK: - UITextFieldDelegate
 //
 extension PemoLoginViewController: UITextFieldDelegate {
@@ -84,7 +102,8 @@ extension PemoLoginViewController: UITextFieldDelegate {
 // MARK: - 서버통신 (Alamofire)
 //
 extension PemoLoginViewController {
-    func loginWihtAlamo(email: String, password: String) {
+    func loginWihtAlamo(email: String, password: String, success: (()->Void)? = nil) {
+        print("로그인 알라모파이어")
         let url = mainDomain + "user/login/"
         let parameters: Parameters = ["username":email, "password":password]
         let call = Alamofire.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: nil)
@@ -93,29 +112,33 @@ extension PemoLoginViewController {
             case .success(let value):
                 let json = JSON(value)
                 print(json)
-//                if !(json["detail"].stringValue.isEmpty) {
-//                    Toast(text: "이메일 혹은 비밀번호를 확인해 주세요").show()
-//                } else {
-                    self.user = DataManager.shared.userList(response: json["user"])
-                    let accessToken = json["token"].stringValue
-                    let id = json["user"]["id"].stringValue
-                    // KeyChain에 Token, id 저장
-                    let tokenValue = TokenAuth()
-                    tokenValue.save(serviceName, account: "accessToken", value: accessToken)
-                    tokenValue.save(serviceName, account: "id", value: id)
-                    //                print(tokenValue.load(serviceName, account: "accessToken"))
-                    //                print(tokenValue.load(serviceName, account: "id"))
-                    
-                    guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIMAIN") else { return }
-                   
-                    self.present(nextViewController, animated: true, completion: nil)
-//                }
+                //                if !(json["detail"].stringValue.isEmpty) {
+                //                    Toast(text: "이메일 혹은 비밀번호를 확인해 주세요").show()
+                //                } else {
+                self.user = DataManager.shared.userList(response: json["user"])
+                let accessToken = json["token"].stringValue
+                let id = json["user"]["id"].stringValue
+                // KeyChain에 Token, id 저장
+                let tokenValue = TokenAuth()
+                tokenValue.save(serviceName, account: "accessToken", value: accessToken)
+                tokenValue.save(serviceName, account: "id", value: id)
+                //                print(tokenValue.load(serviceName, account: "accessToken"))
+                //                print(tokenValue.load(serviceName, account: "id"))
                 
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+//                success?()
+                guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIMAIN") else { return }
+                
+                self.present(nextViewController, animated: true, completion: {
+                  success?()
+                })
+                    
+                //                }
+                
+//                UIApplication.shared.isNetworkActivityIndicatorVisible = false
             case .failure(let error):
                 print(error)
                 Toast(text: "이메일 혹은 비밀번호를 확인해주세요").show()
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+//                UIApplication.shared.isNetworkActivityIndicatorVisible = false
             }
         }
     }

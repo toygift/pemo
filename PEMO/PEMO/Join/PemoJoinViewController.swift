@@ -50,7 +50,7 @@ class PemoJoinViewController: UIViewController {
         } else {
             guard let email = self.emailTextField.text, let password = self.passwordTextField.text else { return }
             self.joinWithAlamo(email: email, password: password, user_type: UserType.normal.rawValue)
-            UIApplication.shared.isNetworkActivityIndicatorVisible = true
+//            UIApplication.shared.isNetworkActivityIndicatorVisible = true
         }
     }
     // MARK: - 이메일정규식
@@ -126,7 +126,7 @@ extension PemoJoinViewController {
                 print(error)
                 print("########################## 리스폰스 실패 ##########################")
                 Toast(text: "이미 존재하는 이메일 입니다").show()
-                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+//                UIApplication.shared.isNetworkActivityIndicatorVisible = false
             }
         }
     }

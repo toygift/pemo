@@ -6,14 +6,17 @@
 //  Copyright © 2017년 Jaeseong. All rights reserved.
 //
 
-import Foundation
 import UIKit
+import CoreData
 
-
-struct MemoData {
-    var id: Int?
+class MemoData {
+    var id: Int64?
     var title: String?
     var content: String?
-    var image: String?
-    var category_id: Int?
+    var image: UIImage?
+    var category_id: Int64?
+    var created_date: Date?
+    var modified_date: Date?
+    
+    var objectID: NSManagedObjectID?
 }
