@@ -30,6 +30,9 @@ class PemoJoinViewController: UIViewController {
     @IBOutlet var passwordTextField: UITextField!
     @IBOutlet var passwordConfirmTextField: UITextField!
     @IBOutlet var joinButton: UIButton!
+    @IBAction func dismissButton(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
+    }
     @IBAction func join(_ sender: UIButton) {
         print("########################## 회원가입 버튼 클릭 ##########################")
         

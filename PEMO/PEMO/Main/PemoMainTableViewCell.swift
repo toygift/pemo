@@ -27,26 +27,21 @@ class PemoMainTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         self.cellView.layer.cornerRadius = 7
         self.cellView.layer.masksToBounds = false
-        self.cellView.layer.shadowColor = UIColor.white.cgColor
-        self.cellView.layer.shadowOffset = CGSize(width: 0, height: 5)
-        self.cellView.layer.shadowOpacity = 0.0
-        self.cellView.layer.borderWidth = 1.0
-        self.cellView.layer.borderColor = UIColor.lightGray.cgColor
         
+        self.cellView.layer.shadowColor = UIColor.piGreyish.cgColor
+        self.cellView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        self.cellView.layer.shadowOpacity = 0.4
+        
+        self.cellView.layer.borderWidth = 0.2
+        self.cellView.layer.borderColor = UIColor.piGreyish.cgColor
+        self.title.textColor = UIColor.piBrownishGrey
+        self.contents.textColor = UIColor.piBrownishGrey
     }
 }
 
 extension PemoMainTableViewCell {
     // 테이블뷰 uiCustom
     func uiCustom() {
-//        self.cellView.layer.cornerRadius = 7
-//        self.cellView.layer.borderWidth = 1
-//        self.cellView.layer.borderColor = UIColor.lightGray.cgColor
-//        self.contentCellView.layer.cornerRadius = 7
-//        self.contentCellView.layer.borderWidth = 1
-//        self.contentCellView.layer.borderColor = UIColor.lightGray.cgColor
-        
-        
         
     }
     // 테이블뷰 셀에 내용 표시

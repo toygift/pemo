@@ -11,17 +11,22 @@ import Alamofire
 import SwiftyJSON
 import Toaster
 import LocalAuthentication
+import RealmSwift
 
 class PemoLoginViewController: UIViewController {
+    private var realm: Realm!
     
     var user: User = User()
     // MARK: - @IB
     //
+    
     @IBOutlet var emailTextField: UITextField!
     @IBOutlet var passwordTextField: UITextField!
     @IBOutlet var loginButton: UIButton!
     @IBOutlet var loginFacebookButton: UIButton!
-    
+    @IBAction func dismissButton(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
+    }
     @IBAction func login(_ sender: UIButton) {
         print("로그인")
         self.emailTextField.resignFirstResponder()
@@ -33,17 +38,7 @@ class PemoLoginViewController: UIViewController {
             Toast(text: "password는 8자 이상입니다").show()
         }
         guard let email = self.emailTextField.text, let password = self.passwordTextField.text else { return }
-        self.loginWihtAlamo(email: email, password: password, success:  {
-            let sync = DataSync()
-            DispatchQueue.main.async {
-                print("다운로드")
-                sync.memoDownload()
-            }
-            DispatchQueue.main.async {
-                print("업로드")
-                sync.memoUpload()
-            }
-        })
+        self.loginWihtAlamo(email: email, password: password)
 //        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         
     }
@@ -66,13 +61,19 @@ class PemoLoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        do {
+            realm = try Realm()
+            
+        } catch {
+            print("\(error)")
+        }
         self.uiCustom()
         self.emailTextField.delegate = self
         self.passwordTextField.delegate = self
         //        navigationController?.navigationBar.isHidden = true
         let tokenValue = TokenAuth()
-        print(" 뷰디드로드",tokenValue.load(serviceName, account: "accessToken"))
-        print(" 뷰디드로드",tokenValue.load(serviceName, account: "id"))
+        print(" 뷰디드로드",tokenValue.load(serviceName, account: "accessToken") ?? 0)
+        print(" 뷰디드로드",tokenValue.load(serviceName, account: "id") ?? 0)
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -102,7 +103,7 @@ extension PemoLoginViewController: UITextFieldDelegate {
 // MARK: - 서버통신 (Alamofire)
 //
 extension PemoLoginViewController {
-    func loginWihtAlamo(email: String, password: String, success: (()->Void)? = nil) {
+    func loginWihtAlamo(email: String, password: String) {
         print("로그인 알라모파이어")
         let url = mainDomain + "user/login/"
         let parameters: Parameters = ["username":email, "password":password]
@@ -129,7 +130,20 @@ extension PemoLoginViewController {
                 guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIMAIN") else { return }
                 
                 self.present(nextViewController, animated: true, completion: {
-                  success?()
+//                    print("프레젠트 넥스트 뷰 컨트롤러:")
+//                    let sync = DataSync()
+//                    let syncData = sync.writeMemoAlamo(method: .get)
+//                    do {
+//                        try self.realm.write {
+//                            for i in syncData {
+//                                self.realm.add(i)
+//                                print(i)
+//                            }
+//                        }
+//                        
+//                    } catch {
+//                        print("\(error)")
+//                    }
                 })
                     
                 //                }

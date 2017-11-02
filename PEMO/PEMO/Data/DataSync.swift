@@ -18,6 +18,41 @@ class DataSync {
         return appDelegate.persistentContainer.viewContext
     }()
     
+//    func writeMemoAlamo(method: HTTPMethod) -> [MemoData] {
+//        print("알라모")
+//        
+//        var responseMemos = [MemoData]()
+//        let url = mainDomain + "memo/"
+//        
+//        let tokenValue = TokenAuth()
+//        let headers = tokenValue.getAuthHeaders()
+//        let call = Alamofire.request(url, method: method, parameters: nil, encoding: JSONEncoding.default, headers: headers)
+//        call.responseJSON { (response) in
+//            switch response.result {
+//            case .success(let value):
+//                let json = JSON(value)
+//                print("로그인시 호출되는 알라모파이어 입니다    :    ",json)
+//                for json in json.arrayValue {
+//                    let responseMemo = MemoData()
+//                    responseMemo.id = json["id"].intValue
+//                    responseMemo.title = json["title"].stringValue
+//                    responseMemo.content = json["content"].stringValue
+//                    //                responseMemo.image = json["image"].
+//                    responseMemo.category_id = json["category_id"].intValue
+//                    responseMemo.created_date = self.stringDate(json["created_date"].stringValue)
+//                    responseMemo.modified_date = self.stringDate(json["modified_date"].stringValue)
+//                    responseMemos.append(responseMemo)
+//                }
+//                
+//                
+//            case .failure(let error):
+//                print(error)
+//            }
+//        }
+//        return responseMemos
+//    }
+    
+    
     func memoDownload() {
         let userD = UserDefaults.standard
         guard userD.value(forKey: "firstLogin") == nil else { return }

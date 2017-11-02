@@ -1,18 +1,39 @@
 PODS:
   - Alamofire (4.5.1)
+  - AlamofireObjectMapper (5.0.0):
+    - Alamofire (~> 4.1)
+    - ObjectMapper (~> 3.0)
+  - ObjectMapper (3.0.0)
+  - ObjectMapper+Realm (0.5):
+    - ObjectMapper
+    - RealmSwift
+  - Realm (3.0.1):
+    - Realm/Headers (= 3.0.1)
+  - Realm/Headers (3.0.1)
+  - RealmSwift (3.0.1):
+    - Realm (= 3.0.1)
   - SwiftyJSON (4.0.0-alpha.1)
   - Toaster (2.1.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.5)
+  - AlamofireObjectMapper (~> 5.0)
+  - ObjectMapper (~> 3.0)
+  - ObjectMapper+Realm (~> 0.5)
+  - RealmSwift (~> 3.0)
   - SwiftyJSON (= 4.0.0-alpha.1)
   - Toaster (~> 2.1)
 
 SPEC CHECKSUMS:
   Alamofire: 2d95912bf4c34f164fdfc335872e8c312acaea4a
+  AlamofireObjectMapper: 5fafc816351cbbc0d486611aaeba7461c0cbad49
+  ObjectMapper: 92230db59bf8f341a5c3a3cf0b9fbdde3cf0d87f
+  ObjectMapper+Realm: 3188789fb77c189c7a83cb625333a607eb61a08f
+  Realm: ba6144c74f835f7497791f6599d63a7755377b83
+  RealmSwift: 7d13b1ac4b6022a13f841e3143e7789c9e40ad0d
   SwiftyJSON: dc88934f85fb50b263b1632b9cbad3402505783e
   Toaster: 8c3225dc465bef4aa57e147a288724576df8e439
 
-PODFILE CHECKSUM: 774f78968d2644cf0061da3508486c54702850cc
+PODFILE CHECKSUM: d2346000caf87f19fae414bc3f927ad791bb71bd
 
 COCOAPODS: 1.3.1
