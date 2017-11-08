@@ -534,6 +534,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="JcL-NN-LVE" secondAttribute="bottom" constant="-12" id="5kb-T6-w0Q"/>
                                     <constraint firstItem="JcL-NN-LVE" firstAttribute="leading" secondItem="W5c-kN-NJh" secondAttribute="trailing" constant="98" id="DrU-h1-Lbw"/>
@@ -681,7 +682,7 @@
                                         <rect key="frame" x="37" y="22" width="25" height="24"/>
                                         <state key="normal" image="folder"/>
                                         <connections>
-                                            <segue destination="4Fu-Nk-7HA" kind="presentation" id="meS-KA-ekQ"/>
+                                            <action selector="folder:" destination="xm2-YS-DxY" eventType="touchUpInside" id="RVV-s7-aQr"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iEj-k9-xyq">
@@ -739,47 +740,47 @@
         <!--Pemo Folder Collection View Controller-->
         <scene sceneID="vH4-cr-3wS">
             <objects>
-                <collectionViewController id="ojg-XE-2Nf" customClass="PemoFolderCollectionViewController" customModule="PEMO" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="NAVIFOLDERs" id="ojg-XE-2Nf" customClass="PemoFolderCollectionViewController" customModule="PEMO" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="r22-aL-4y6">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="UXi-Xo-8gf">
-                            <size key="itemSize" width="100" height="100"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="30" id="UXi-Xo-8gf">
+                            <size key="itemSize" width="50" height="50"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <inset key="sectionInset" minX="10" minY="10" maxX="10" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="COLLL" id="eV0-9q-Nda" customClass="PemoFolderCollectionViewCell" customModule="PEMO" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                <rect key="frame" x="10" y="10" width="50" height="50"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                    <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ss.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="emv-T6-k3V">
-                                            <rect key="frame" x="0.0" y="7" width="100" height="62"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="folder" highlightedImage="folderCheck" translatesAutoresizingMaskIntoConstraints="NO" id="emv-T6-k3V">
+                                            <rect key="frame" x="13" y="7" width="25" height="23"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="62" id="wbj-a3-UH3"/>
+                                                <constraint firstAttribute="height" constant="23" id="wbj-a3-UH3"/>
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eul-r9-SRD">
-                                            <rect key="frame" x="0.0" y="72" width="100" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <rect key="frame" x="12" y="31" width="27" height="12"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                 </view>
                                 <constraints>
-                                    <constraint firstItem="emv-T6-k3V" firstAttribute="leading" secondItem="eV0-9q-Nda" secondAttribute="leading" id="7h8-dz-rWH"/>
-                                    <constraint firstAttribute="trailing" secondItem="emv-T6-k3V" secondAttribute="trailing" id="Mks-tf-CMJ"/>
+                                    <constraint firstItem="emv-T6-k3V" firstAttribute="leading" secondItem="eV0-9q-Nda" secondAttribute="leading" constant="13" id="7h8-dz-rWH"/>
+                                    <constraint firstAttribute="trailing" secondItem="emv-T6-k3V" secondAttribute="trailing" constant="12" id="Mks-tf-CMJ"/>
                                     <constraint firstAttribute="bottom" secondItem="eul-r9-SRD" secondAttribute="bottom" constant="7" id="PBm-mU-Ffu"/>
                                     <constraint firstItem="emv-T6-k3V" firstAttribute="top" secondItem="eV0-9q-Nda" secondAttribute="top" constant="7" id="PE3-xh-Orz"/>
-                                    <constraint firstAttribute="trailing" secondItem="eul-r9-SRD" secondAttribute="trailing" id="PsL-ga-EOy"/>
-                                    <constraint firstItem="eul-r9-SRD" firstAttribute="leading" secondItem="eV0-9q-Nda" secondAttribute="leading" id="dMb-VQ-YyC"/>
-                                    <constraint firstItem="eul-r9-SRD" firstAttribute="top" secondItem="emv-T6-k3V" secondAttribute="bottom" constant="3" id="lc4-ej-lT7"/>
+                                    <constraint firstAttribute="trailing" secondItem="eul-r9-SRD" secondAttribute="trailing" constant="11" id="PsL-ga-EOy"/>
+                                    <constraint firstItem="eul-r9-SRD" firstAttribute="leading" secondItem="eV0-9q-Nda" secondAttribute="leading" constant="12" id="dMb-VQ-YyC"/>
+                                    <constraint firstItem="eul-r9-SRD" firstAttribute="top" secondItem="emv-T6-k3V" secondAttribute="bottom" constant="1" id="lc4-ej-lT7"/>
                                 </constraints>
                                 <connections>
                                     <outlet property="iconImage" destination="emv-T6-k3V" id="o75-PZ-gsL"/>
@@ -801,7 +802,22 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rUu-c7-Dr5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="554" y="-228"/>
+            <point key="canvasLocation" x="840.79999999999995" y="-228.03598200899552"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="5jC-Gn-cyS">
+            <objects>
+                <viewController id="Iww-u3-eXO" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ghp-1u-bfX">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="Iii-YG-o67"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8R1-Yu-wdK" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-724" y="461"/>
         </scene>
         <!--Pemo New Memo View Controller-->
         <scene sceneID="Loz-Kr-mmA">
@@ -839,7 +855,7 @@
                             <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lJU-7S-7x5">
                                 <rect key="frame" x="0.0" y="599" width="375" height="68"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vbq-QP-9JC">
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vbq-QP-9JC">
                                         <rect key="frame" x="27" y="25" width="23" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="COu-J5-Cgk"/>
@@ -854,8 +870,11 @@
                                             <constraint firstAttribute="height" constant="21" id="ii0-cD-L00"/>
                                         </constraints>
                                         <state key="normal" title="Button" image="folderCheck"/>
+                                        <connections>
+                                            <action selector="selectFolderwithMemo:" destination="jKX-dL-Szr" eventType="touchUpInside" id="BbA-CQ-7xA"/>
+                                        </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="boa-Q0-ztk">
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="boa-Q0-ztk">
                                         <rect key="frame" x="325" y="25" width="23" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="DE1-6j-O28"/>
@@ -975,7 +994,6 @@
         <image name="newmemo" width="219" height="116"/>
         <image name="search" width="24" height="23"/>
         <image name="signin" width="375" height="116"/>
-        <image name="ss.jpg" width="540" height="405"/>
         <image name="trash" width="24" height="23"/>
         <image name="withpic" width="223" height="89"/>
         <image name="write" width="24" height="25"/>

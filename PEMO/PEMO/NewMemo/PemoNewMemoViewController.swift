@@ -14,25 +14,30 @@ import RealmSwift
 import ObjectMapper
 import AlamofireObjectMapper
 import ObjectMapper_Realm
-
+import KUIPopOver
 
 enum WriteType {
     case new
     case edit
 }
 
+
 class PemoNewMemoViewController: UIViewController {
+    
+    
+    
     var selectedFolder: Folder!
     private var realm: Realm!
-    private var memos: Results<MemoData>!
+    private var folders: Results<Folder>!
     private var token: NotificationToken!
-    
+    private var memos: Results<MemoData>!
     var subject: String? // 실시간 제목
     //    lazy var memoDao = MemoDAO()
     
     var memoTransfer: MemoData?
     var memoPkTransfer: Int!
     var writeType: WriteType = .new
+    var transferIndexPath: Results<Folder>!
     @IBOutlet var dateLabel: UILabel!
     @IBOutlet var foldername: UILabel!
     @IBOutlet var bottomView: UIView!
@@ -40,6 +45,12 @@ class PemoNewMemoViewController: UIViewController {
     @IBOutlet var inputImageView: UIImageView!
     @IBAction func cancelWrite(_ sender: UIBarButtonItem) {
         self.navigationController?.popViewController(animated: true)
+    }
+    @IBAction func selectFolderwithMemo(_ sender: UIButton) {
+        guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIFOLDERs") as? PemoFolderCollectionViewController else { return }
+        nextViewController.popOverType = 1
+        nextViewController.showPopover(withNavigationController: sender, sourceRect: sender.bounds)
+
     }
     @IBAction func editMemo(_ sender: UIButton) {
         updateAndAdd()
@@ -51,6 +62,7 @@ class PemoNewMemoViewController: UIViewController {
             //            do {
             guard let title = self.subject , let content = self.inputTextView.text else { return }
             self.writeMemoAlamo(title: title, content: content, method: .patch, writeType: .edit)
+            print("edit")
         } else {
             //메모생성
             let newMemo = MemoData()
@@ -58,7 +70,9 @@ class PemoNewMemoViewController: UIViewController {
             newMemo.content = self.inputTextView.text
             guard let title = self.subject , let content = self.inputTextView.text else { return }
             self.writeMemoAlamo(title: title, content: content, method: .post, writeType: .new)
+            print("new")
         }
+        print("if문 나옴")
 //        self.navigationController?.popViewController(animated: true)
         self.dismiss(animated: true, completion: nil)
     }
@@ -208,7 +222,7 @@ extension PemoNewMemoViewController: UITextViewDelegate {
 // MARK: - Alamofire
 //
 extension PemoNewMemoViewController {
-    func writeMemoAlamo(title: String, content: String, method: HTTPMethod, writeType: WriteType, category_id: Int = 1)/* -> [MemoData] */{
+    func writeMemoAlamo(title: String, content: String, method: HTTPMethod, writeType: WriteType, category_id: Int = 37)/* -> [MemoData] */{
         print("알라모진입")
         var url = ""
         if writeType == .new {
@@ -220,7 +234,7 @@ extension PemoNewMemoViewController {
             print("URL입니다",url)
         }
         
-        let parameters: Parameters = ["title":title, "content":content]
+        let parameters: Parameters = ["title":title, "content":content, "category_id":category_id]
         let tokenValue = TokenAuth()
         let headers = tokenValue.getAuthHeaders()
         let call = Alamofire.request(url, method: method, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
@@ -235,9 +249,10 @@ extension PemoNewMemoViewController {
                     guard let addNewmemo = Mapper<MemoData>().mapDictionary(JSONObject: value) else { return }
                     print("나는 aa입니다:                          "  ,addNewmemo)
                     guard let new = addNewmemo["memo"] else { return }
+                    print("나는 aa입니다:                          "  ,new)
                     do {
                         try self.realm.write {
-                            self.selectedFolder.memos.append(new)
+//                            self.selectedFolder.memos.append(new)
                         }
                     } catch {
                         print("\(error)")

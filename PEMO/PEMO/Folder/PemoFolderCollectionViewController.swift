@@ -13,17 +13,27 @@ import Toaster
 import RealmSwift
 import ObjectMapper
 import ObjectMapper_Realm
+import KUIPopOver
 
+
+protocol PemoFolderCollectionViewControllerDelegate: class {
+    func alamo(with: PemoFolderCollectionViewController, indexPath: IndexPath)
+}
 private let reuseIdentifier = "cell"
 
-class PemoFolderCollectionViewController: UICollectionViewController, HalfModalPresentable, UITextFieldDelegate {
+class PemoFolderCollectionViewController: UICollectionViewController, HalfModalPresentable, UITextFieldDelegate, KUIPopOverUsable {
     
+    weak var delegate: PemoFolderCollectionViewControllerDelegate?
     //    var memoFolderList: [MemoFolderData] = []
-    
+    var contentSize: CGSize {
+        return CGSize(width: self.view.frame.width, height: 215)
+    }
     
     private var realm: Realm!
     private var folders: Results<Folder>!
     private var token: NotificationToken!
+    
+    var popOverType: Int = 0
     var textFieldText: String!
     var naviTextField: UITextField?
     @IBAction func maximizeButtonTapped(sender: AnyObject) {
@@ -50,11 +60,13 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
         }
         self.firstGetFolder(method: .get)
         folders = realm?.objects(Folder.self).sorted(byKeyPath: "id", ascending: false)
-        //        memos = selectedFolder.memos.sorted(byKeyPath: "id", ascending: false)
+//                memos = selectedFolder.memos.sorted(byKeyPath: "id", ascending: false)
         token = folders.observe({ (change) in
             self.collectionView?.reloadData()
         })
         
+//        self.collectionView?.frame.size = CGSize(width: self.view.frame.width, height: 215)
+//        self.collectionView?.frame = CGRect(x: 0, y: 400, width: self.view.frame.width, height: 215)
         //        navigationItem.title = selectedFolder.title
         
         //        let textfield = UITextField(frame: CGRect(x: 0, y: 0, width: 230, height: 24))
@@ -80,7 +92,7 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
     
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
+        
         return self.folders.count
     }
     
@@ -93,11 +105,17 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // 셀렉트 하면 메모뷰 띄워야함
         // 폴더에 들어있는 메모
-        guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "MAIN") as? PemoMainViewController else { return }
-        nextViewController.folderId = folders[indexPath.row].id
-        nextViewController.transCollection = false
+        if self.popOverType == 0 {
+            print("팝오버 타입 0번     ->  딜리게이트로 넘어가라...")
+            self.delegate?.alamo(with: self, indexPath: indexPath)
+            
+        } else {
+            
+        }
         
-        self.present(nextViewController, animated: true, completion: nil)
+    
+        
+        
     }
 }
 extension PemoFolderCollectionViewController {
@@ -121,10 +139,10 @@ extension PemoFolderCollectionViewController {
                 print("불러오기",memoResponse)
                 do {
                     try self.realm.write {
-                        for i in memoResponse {
-                            self.realm.add(i)
-                            print(i)
-                        }
+//                        for i in memoResponse {
+//                            self.realm.add(i)
+//                            print(i)
+//                        }
                     }
                 } catch {
                     

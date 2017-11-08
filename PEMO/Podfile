@@ -10,6 +10,7 @@ target 'PEMO' do
   pod 'ObjectMapper', '~> 3.0'
   pod 'RealmSwift', '~> 3.0'
   pod 'ObjectMapper+Realm', '~> 0.5'
+  pod 'KUIPopOver'
   use_frameworks!
 
   # Pods for PEMO

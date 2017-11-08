@@ -14,6 +14,7 @@ import RealmSwift
 import ObjectMapper
 import AlamofireObjectMapper
 import ObjectMapper_Realm
+import KUIPopOver
 
 enum MemoDataType {
     case list
@@ -23,15 +24,20 @@ enum DataType {
     case memo
     case folder
 }
-class PemoMainViewController: UIViewController {
+class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderCollectionViewControllerDelegate {
     
-    var selectedFolder: Folder!
+    var tempFolder: [Folder] = []
     var folderId: Int = 0
+    
+    
     private var realm: Realm!
     private var memos: Results<MemoData>!
     private var folders: Results<Folder>!
     private var token: NotificationToken!
     //    lazy var memoDao = MemoDAO()
+    var contentSize: CGSize {
+        return CGSize(width: self.view.frame.width, height: 300)
+    }
     
     var halfModalTransitioningDelegate: HalfModalTransitioningDelegate?
     //    let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -50,30 +56,40 @@ class PemoMainViewController: UIViewController {
     @IBOutlet var topView: UIView!
     @IBOutlet var bottomView: UIView!
     @IBOutlet var newMemoButton: UIButton!
-//    @IBOutlet var mainBarButton: UIBarButtonItem!
+    //    @IBOutlet var mainBarButton: UIBarButtonItem!
     @IBAction func folder(_ sender: UIButton) {
-        guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIFOLDER") else { return }
-        self.present(nextViewController, animated: true, completion: nil)
+        guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIFOLDERs") as? PemoFolderCollectionViewController else { return }
+        nextViewController.popOverType = 0
+        nextViewController.delegate = self
+        nextViewController.showPopover(withNavigationController: sender, sourceRect: sender.bounds)
+        
+        
     }
     @IBAction func newMemo(_ sender: UIButton) {
         
         guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NEWMEMO") as? PemoNewMemoViewController else { return }
         nextViewController.writeType = .new
-//        self.navigationController?.pushViewController(nextViewController, animated: true)
+        //        self.navigationController?.pushViewController(nextViewController, animated: true)
         self.present(nextViewController, animated: true, completion: nil)
     }
     @IBAction func search(_ sender: UIButton) {
-        
-        self.navigationItem.titleView = searchBar
+        if searchBar.isHidden == false {
+            searchBar.isHidden = true
+        }
+        self.titleLabel.isHidden = true
+        self.newMemoButton.isHidden = true
+        self.topView.addSubview(searchBar)
+//        self.navigationItem.titleView = searchBar
         searchBar.delegate = self
         searchBar.placeholder = "검색"
         searchBar.sizeToFit()
         searchBar.becomeFirstResponder()
         searchBar.showsCancelButton = true
+        searchBar.tintColor = UIColor.white
         //        searchBar.enablesReturnKeyAutomatically = false
         
     }
-
+    
     
     // MARK: - LIFE CYCLE
     //
@@ -87,25 +103,38 @@ class PemoMainViewController: UIViewController {
         self.tableView.rowHeight = UITableViewAutomaticDimension
         print(Realm.Configuration.defaultConfiguration.fileURL!)
         
-        self.firstGetMemo(method: .get, type: .memo)
-        self.firstGetMemo(method: .get, type: .folder)
+        self.firstGetMemo(method: .get, type: .folder) // 폴더불러오는 알라모파이어
+        
+        folders = realm?.objects(Folder.self).sorted(byKeyPath: "id", ascending: false)
+        
+        self.firstGetMemo(method: .get, type: .memo) // 메모불러오는 알라모파이어
+        
+        memos = realm.objects(MemoData.self).sorted(byKeyPath: "id", ascending: false)
+        token = memos.observe({ (change) in
+            self.tableView.reloadData()
+        })
+        
         
         print("테이블뷰 뷰 디드 로드")
         if transCollection == true {
-            memos = realm.objects(MemoData.self).sorted(byKeyPath: "id", ascending: false)
-            token = memos.observe({ (change) in
-                self.tableView.reloadData()
-            })
+//            folders = realm?.objects(Folder.self).sorted(byKeyPath: "id", ascending: false)
+//            // 제대로 만들어 졌다면 폴더만 가져와도 메모는 따라온다..?
+//            memos = realm.objects(MemoData.self).sorted(byKeyPath: "id", ascending: false)
+//            //            memos = selectedFolder.memos.sorted(byKeyPath: "id", ascending: false)
+//            token = memos.observe({ (change) in
+//                self.tableView.reloadData()
+//            })
         } else {
-            memos = selectedFolder.memos.sorted(byKeyPath: "id", ascending: false)
-            token = memos.observe({ (change) in
-                self.tableView.reloadData()
-            })
+            //            memos = selectedFolder.memos.sorted(byKeyPath: "id", ascending: false)
+            //            token = memos.observe({ (change) in
+            //                self.tableView.reloadData()
+            //            })
         }
         
         
+        
         self.searchBar.enablesReturnKeyAutomatically = false
-
+        
         self.tableView.reloadData()
         self.uiCustom()
         
@@ -120,11 +149,11 @@ class PemoMainViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         print("뷰윌어피어")
-
+        
     }
     override func viewDidAppear(_ animated: Bool) {
         print("뷰디드어피어")
-
+        
         
     }
     
@@ -137,11 +166,17 @@ extension PemoMainViewController: UISearchBarDelegate {
         self.tableView.reloadData()
     }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        self.navigationItem.titleView = nil
+//        self.navigationItem.titleView = nil
+        self.searchBar.isHidden = false
+        self.titleLabel.isHidden = false
+        self.newMemoButton.isHidden = false
         searchBar.endEditing(true)
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.navigationItem.titleView = nil
+//        self.navigationItem.titleView = nil
+        self.searchBar.isHidden = false
+        self.titleLabel.isHidden = false
+        self.newMemoButton.isHidden = false
         searchBar.endEditing(true)
     }
 }
@@ -158,28 +193,52 @@ extension PemoMainViewController: UITableViewDelegate, UITableViewDataSource {
         return memos.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        
         let row = self.memos[indexPath.row]
         //        let cellId = section.image == nil ? "memoCellWithImage" : "memoCell" // 서버에서 이미지구현시 앞뒤 바꿀것
         let cell = tableView.dequeueReusableCell(withIdentifier: "memoCell") as? PemoMainTableViewCell
-//        func stringDate(_ value: String) -> Date {
-//            let dateFormatter = DateFormatter()
-//
-//            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//            return dateFormatter.date(from: value)!
-//        let dateFf = DateFormatter()
-//        dateFf.dateFormat = "yyyy-MM-dd"
-//        dateFf.date(from: row.created_date!)
-//
+        //        func stringDate(_ value: String) -> Date {
+        //            let dateFormatter = DateFormatter()
+        //
+        //            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        //            return dateFormatter.date(from: value)!
+        //        let dateFf = DateFormatter()
+        //        dateFf.dateFormat = "yyyy-MM-dd"
+        //        dateFf.date(from: row.created_date!)
+        //
         cell?.title.text = row.created_date
         cell?.contents.text = row.content
         // imageData????????????????????????????????????????????????????????????????????????????
-    
+        
         return cell!
     }
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 71
-//    }
+    //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    //        return 71
+    //    }
+    
+    func alamo(with: PemoFolderCollectionViewController, indexPath: IndexPath) {
+        print("PemoFolderCollectionViewControllerDelegate 호출됨")
+        //        self.memos =
+        //        let cell = tableView(self.tableView, cellForRowAt: indexPath) as? PemoMainTableViewCell
+        
+        //        cell?.title.text = "안녕"
+        //        cell?.contents.text = "하세요"
+        //        self.tableView.reloadData()
+        //        with.dismissPopover(animated: true)
+        //
+        //
+        
+        let count = realm.objects(Folder.self)[indexPath.row]
+        let counts = count.memos.filter("TRUEPREDICATE")
+        
+        self.memos = counts
+        self.tableView.reloadData()
+        
+        
+    }
+    
+    
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("didselect")
         guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NEWMEMO") as? PemoNewMemoViewController else { return }
@@ -215,46 +274,46 @@ extension PemoMainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
-//
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        if section == 0 {
-//            return 1
-//        } else {
-//            return cellSpacingHeight
-//        }
-//
-//    }
-//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//        return nil
-//    }
-//    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-//        return cellSpacingHeight
-//    }
-//    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
-//        return .delete
-//    }
-//
-
-
-//
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 5))
-//        headerView.backgroundColor = UIColor.black
-//        return headerView
-//    }
-//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//        return self.memoDataList[section].title
-//    }
-//    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-//        if let header = view as? UITableViewHeaderFooterView {
-//            header.tintColor = UIColor.piPaleGrey
-//        }
-//    }
+    //
+    //    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    //        if section == 0 {
+    //            return 1
+    //        } else {
+    //            return cellSpacingHeight
+    //        }
+    //
+    //    }
+    //    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    //        return nil
+    //    }
+    //    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    //        return cellSpacingHeight
+    //    }
+    //    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    //        return .delete
+    //    }
+    //
+    
+    
+    //
+    //    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    //        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 5))
+    //        headerView.backgroundColor = UIColor.black
+    //        return headerView
+    //    }
+    //    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    //        return self.memoDataList[section].title
+    //    }
+    //    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+    //        if let header = view as? UITableViewHeaderFooterView {
+    //            header.tintColor = UIColor.piPaleGrey
+    //        }
+    //    }
 }
 
 //// MARK: - Alamofire
 extension PemoMainViewController {
-
+    
     //    // 메모삭제
     func memoDelete(id: Int) {
         let url = mainDomain + "memo/\(id)/"
@@ -276,9 +335,37 @@ extension PemoMainViewController {
     func firstGetMemo(method: HTTPMethod, type: DataType) {
         print("알라모")
         switch type {
+        case .folder:
+            let userDefault = UserDefaults.standard
+            guard userDefault.value(forKey: "firstloginfolder") == nil else { return }
+            
+            let url = mainDomain + "category/"
+            let tokenValue = TokenAuth()
+            let headers = tokenValue.getAuthHeaders()
+            let call = Alamofire.request(url, method: method, parameters: nil, headers: headers)
+            call.responseJSON { (response) in
+                switch response.result {
+                case .success(let value):
+                    let aa = JSON(value)
+                    print("ㄴ이ㅓㅏㄹㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ",aa)
+//                    print(" 초기 로딩 폴더정보 가져옴 ",folderResponse)
+                    guard let folderResponse = Mapper<Folder>().mapArray(JSONObject: value) else { return }
+                    
+                    do {
+                        try self.realm.write {
+                            self.realm.add(folderResponse)
+                        }
+                    } catch {
+                        print("\(error)")
+                    }
+                    userDefault.setValue(true, forKey: "firstloginfolder")
+                case .failure(let error):
+                    print(error)
+                }
+            }
         case .memo:
             let userDefault = UserDefaults.standard
-            guard userDefault.value(forKey: "firstlogin") == nil else { return }
+            guard userDefault.value(forKey: "firstloginmemo") == nil else { return }
             
             let url = mainDomain + "memo/"
             let tokenValue = TokenAuth()
@@ -288,52 +375,28 @@ extension PemoMainViewController {
                 switch response.result {
                 case .success(let value):
                     guard let memoResponse = Mapper<MemoData>().mapArray(JSONObject: value) else { return }
-                    //                print("dkdkdkkkㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ",memoResponse)
+           
                     do {
                         try self.realm.write {
-                            for i in memoResponse {
-                                self.realm.add(i)
+                            
+                            for tempfolder in self.folders {
+                                for tempmemo in memoResponse {
+                                    if tempfolder.id == tempmemo.category_id {
+                                        tempfolder.memos.append(tempmemo)
+                                    }
+                                }
                             }
                         }
                     } catch {
                         print("\(error)")
                     }
-                    userDefault.setValue(true, forKey: "firstlogin")
-                case .failure(let error):
-                    print(error)
-                }
-            }
-        case .folder:
-            let userDefault = UserDefaults.standard
-            guard userDefault.value(forKey: "firstlogins") == nil else { return }
-            
-            let url = mainDomain + "category/\(self.folderId)/"
-            let tokenValue = TokenAuth()
-            let headers = tokenValue.getAuthHeaders()
-            let call = Alamofire.request(url, method: method, parameters: nil, headers: headers)
-            call.responseJSON { (response) in
-                switch response.result {
-                case .success(let value):
-                    guard let memoResponse = Mapper<MemoData>().mapArray(JSONObject: value) else { return }
-                                    print("dkdkdkkkㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏㅏ",memoResponse)
-                    do {
-                        try self.realm.write {
-                            for i in memoResponse {
-                                self.realm.add(i)
-                            }
-                        }
-                    } catch {
-                        print("\(error)")
-                    }
-                    userDefault.setValue(true, forKey: "firstlogins")
+                    userDefault.setValue(true, forKey: "firstloginmemo")
                 case .failure(let error):
                     print(error)
                 }
             }
         }
-        
-        }
-        
+    }
 }
 
 
@@ -342,37 +405,37 @@ extension PemoMainViewController {
 extension PemoMainViewController {
     func uiCustom() {
         
-//        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "mainviewcolor")!)
+        //        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "mainviewcolor")!)
         
         self.bottomView.addTopBorderWithColor(color: .lightGray, width: 0.8)
         self.titleLabel.textColor = UIColor.piBrownishGrey
-//        self.newMemoButton.layer.cornerRadius = 7
-//        self.newMemoButton.layer.borderColor = UIColor.lightGray.cgColor
-//        self.newMemoButton.layer.borderWidth = 1
+        //        self.newMemoButton.layer.cornerRadius = 7
+        //        self.newMemoButton.layer.borderColor = UIColor.lightGray.cgColor
+        //        self.newMemoButton.layer.borderWidth = 1
         
         // titleview image
         
         
-//        let rightBar = UIBarButtonItem(customView: imageView)
-//        self.navigationItem.rightBarButtonItem = rightBar
-//        self.navigationController?.navigationBar.barTintColor = UIColor.white
-//        self.navigationController?.navigationBar.tintColor = UIColor.white
-//        self.navigationController?.navigationBar.isTranslucent = false
+        //        let rightBar = UIBarButtonItem(customView: imageView)
+        //        self.navigationItem.rightBarButtonItem = rightBar
+        //        self.navigationController?.navigationBar.barTintColor = UIColor.white
+        //        self.navigationController?.navigationBar.tintColor = UIColor.white
+        //        self.navigationController?.navigationBar.isTranslucent = false
         // navigationbar image
-//        let viewImage = UIImage(named: "navigationbar")
+        //        let viewImage = UIImage(named: "navigationbar")
         //        let width = self.navigationController?.navigationBar.frame.size.width
         //        let height = self.navigationController?.navigationBar.frame.size.height
         //        viewImage?.draw(in: CGRect(x: 0, y: 0, width: width!, height: height!))
-//        self.navigationController?.navigationBar.setBackgroundImage(viewImage, for: .default)
+        //        self.navigationController?.navigationBar.setBackgroundImage(viewImage, for: .default)
         // newMemobutton
         //        let shadowSize : CGFloat = 5.0
         //        let shadowPath = UIBezierPath(rect: CGRect(x: -shadowSize / 2, y: -shadowSize / 2, width: self.newMemoButton.frame.size.width, height: self.newMemoButton.frame.size.height))
-//        self.newMemoButton.layer.masksToBounds = false
-//        self.newMemoButton.layer.borderColor = UIColor.piGreyish.cgColor
-//        self.newMemoButton.layer.borderWidth = 0.5
-//        self.newMemoButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-//        self.newMemoButton.layer.shadowOpacity = 0.3
-//        //        self.newMemoButton.layer.shadowPath = shadowPath.cgPath
+        //        self.newMemoButton.layer.masksToBounds = false
+        //        self.newMemoButton.layer.borderColor = UIColor.piGreyish.cgColor
+        //        self.newMemoButton.layer.borderWidth = 0.5
+        //        self.newMemoButton.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        //        self.newMemoButton.layer.shadowOpacity = 0.3
+        //        //        self.newMemoButton.layer.shadowPath = shadowPath.cgPath
     }
     func stringDate(_ value: String) -> Date {
         let dateFormatter = DateFormatter()

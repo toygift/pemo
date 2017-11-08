@@ -10,6 +10,7 @@ import UIKit
 
 class PemoMainTableViewCell: UITableViewCell {
 
+    
     @IBOutlet var cellView: UIView!
     @IBOutlet var title: UILabel!
     @IBOutlet var contents: UILabel!
