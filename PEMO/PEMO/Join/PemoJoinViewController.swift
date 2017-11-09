@@ -19,11 +19,11 @@ enum UserType: String {
 }
 
 class PemoJoinViewController: UIViewController {
-
+    
     // MARK: - var/let
     //
     var access_key: Bool = false // 페이스북로그인시 true
-  
+    
     // MARK: - @IB
     //
     @IBOutlet var emailTextField: UITextField!
@@ -39,7 +39,7 @@ class PemoJoinViewController: UIViewController {
         self.emailTextField.resignFirstResponder()
         self.passwordTextField.resignFirstResponder()
         self.passwordConfirmTextField.resignFirstResponder()
-
+        
         if (self.emailTextField.text?.isEmpty)! {
             Toast(text: "이메일을 입력해주세요").show()
         } else if self.emailCheck(withEmail: self.emailTextField.text!) == false {
@@ -53,7 +53,7 @@ class PemoJoinViewController: UIViewController {
         } else {
             guard let email = self.emailTextField.text, let password = self.passwordTextField.text else { return }
             self.joinWithAlamo(email: email, password: password, user_type: UserType.normal.rawValue)
-//            UIApplication.shared.isNetworkActivityIndicatorVisible = true
+            //            UIApplication.shared.isNetworkActivityIndicatorVisible = true
         }
     }
     // MARK: - 이메일정규식
@@ -77,7 +77,7 @@ class PemoJoinViewController: UIViewController {
         passwordConfirmTextField.delegate = self
         self.uiCustom()
     }
-
+    
     // MARK: - FUNC
     //
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -103,6 +103,37 @@ extension PemoJoinViewController: UITextFieldDelegate {
         }
         return true
     }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField.isEqual(self.passwordConfirmTextField) {
+            
+            let currentText = textField.text ?? ""
+            let prospectiveText = (currentText as NSString).replacingCharacters(in: range, with: string)
+            
+            
+            if self.passwordTextField.text == prospectiveText {
+//                let length = prospectiveText.count
+                let length = (textField.text?.count)! + string.count - range.length
+                if length >= 8 {
+                    self.joinButton.setImage(UIImage(named: "PEMO_Join.png"), for: .normal)
+                }
+            }
+            /*
+            if self.passwordTextField.text == prospectiveText {
+//                let length = prospectiveText.count
+                let length = (textField.text?.count)! + string.count - range.length
+                if length < 8 {
+                    self.joinButton.setImage(UIImage(named: "PEMO_Join_un.png"), for: .normal)
+                }
+            }*/
+        }
+        return true
+    }
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if textField.isEqual(self.passwordConfirmTextField) {
+            
+        }
+        return true
+    }
 }
 
 // MARK: - 서버통신 (Alamofire)
@@ -120,16 +151,16 @@ extension PemoJoinViewController {
                 let json = JSON(value)
                 print(json)
                 print("########################## 리스폰스 성공 ##########################")
-//                if !json["username"].arrayValue.isEmpty {
-//                    Toast(text: "이미 존재하는 이메일 입니다").show()
-//                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
-//                }
+                //                if !json["username"].arrayValue.isEmpty {
+                //                    Toast(text: "이미 존재하는 이메일 입니다").show()
+                //                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                //                }
                 
             case .failure(let error):
                 print(error)
                 print("########################## 리스폰스 실패 ##########################")
                 Toast(text: "이미 존재하는 이메일 입니다").show()
-//                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                //                UIApplication.shared.isNetworkActivityIndicatorVisible = false
             }
         }
     }

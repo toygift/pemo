@@ -39,7 +39,7 @@ class PemoLoginViewController: UIViewController {
         }
         guard let email = self.emailTextField.text, let password = self.passwordTextField.text else { return }
         self.loginWihtAlamo(email: email, password: password)
-//        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        //        UIApplication.shared.isNetworkActivityIndicatorVisible = true
         
     }
     // MARK: - 이메일정규식
@@ -99,6 +99,35 @@ extension PemoLoginViewController: UITextFieldDelegate {
         }
         return true
     }
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField.isEqual(self.passwordTextField) {
+            let currentText = textField.text ?? ""
+            let prospectiveText = (currentText as NSString).replacingCharacters(in: range, with: string)
+            
+            let length = prospectiveText.count
+            if length >= 8 {
+                self.loginButton.setImage(UIImage(named: "PEMO_Signin.png"), for: .normal)
+            }
+        }
+        return true
+    }
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        
+        return true
+    }
+    //    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+    //        if textField.isEqual(self.passwordTextField) {
+    //            self.loginButton.setImage(UIImage(named: "PEMO_Signin.png"), for: .normal)
+    //        }
+    //
+    //        return true
+    //    }
+    //    func textFieldDidEndEditing(_ textField: UITextField) {
+    //        if textField.isEqual(self.passwordTextField) {
+    //            self.loginButton.setImage(UIImage(named: "PEMO_Signin.png"), for: .normal)
+    //        }
+    //    }
+    
 }
 // MARK: - 서버통신 (Alamofire)
 //
@@ -126,33 +155,33 @@ extension PemoLoginViewController {
                 //                print(tokenValue.load(serviceName, account: "accessToken"))
                 //                print(tokenValue.load(serviceName, account: "id"))
                 
-//                success?()
+                //                success?()
                 guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIMAIN") else { return }
                 
                 self.present(nextViewController, animated: true, completion: {
-//                    print("프레젠트 넥스트 뷰 컨트롤러:")
-//                    let sync = DataSync()
-//                    let syncData = sync.writeMemoAlamo(method: .get)
-//                    do {
-//                        try self.realm.write {
-//                            for i in syncData {
-//                                self.realm.add(i)
-//                                print(i)
-//                            }
-//                        }
-//                        
-//                    } catch {
-//                        print("\(error)")
-//                    }
+                    //                    print("프레젠트 넥스트 뷰 컨트롤러:")
+                    //                    let sync = DataSync()
+                    //                    let syncData = sync.writeMemoAlamo(method: .get)
+                    //                    do {
+                    //                        try self.realm.write {
+                    //                            for i in syncData {
+                    //                                self.realm.add(i)
+                    //                                print(i)
+                    //                            }
+                    //                        }
+                    //
+                    //                    } catch {
+                    //                        print("\(error)")
+                    //                    }
                 })
-                    
+                
                 //                }
                 
-//                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+            //                UIApplication.shared.isNetworkActivityIndicatorVisible = false
             case .failure(let error):
                 print(error)
                 Toast(text: "이메일 혹은 비밀번호를 확인해주세요").show()
-//                UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                //                UIApplication.shared.isNetworkActivityIndicatorVisible = false
             }
         }
     }

@@ -19,7 +19,6 @@
 		3F7BBFB91FA08D9500624A04 /* MemoFolderData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7BBFB81FA08D9500624A04 /* MemoFolderData.swift */; };
 		3F7BBFBB1FA0956300624A04 /* PemoMainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7BBFBA1FA0956300624A04 /* PemoMainTableViewCell.swift */; };
 		3FCC0DEF1F9F51230065070A /* PemoNewMemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FCC0DEE1F9F51230065070A /* PemoNewMemoViewController.swift */; };
-		3FCC0DF31F9F54AB0065070A /* ss.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3FCC0DF21F9F54AA0065070A /* ss.jpg */; };
 		3FCC0DF51F9F94140065070A /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FCC0DF41F9F94140065070A /* DataManager.swift */; };
 		3FD2B70A1F9DB3E500204362 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD2B7091F9DB3E500204362 /* AppDelegate.swift */; };
 		3FD2B70F1F9DB3E500204362 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3FD2B70D1F9DB3E500204362 /* Main.storyboard */; };
@@ -34,6 +33,8 @@
 		3FE3886D1FA08C98002A9B37 /* MemoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE3886C1FA08C98002A9B37 /* MemoData.swift */; };
 		3FE4B9C21FA706AF00DB6DBE /* MemoDAO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE4B9C11FA706AF00DB6DBE /* MemoDAO.swift */; };
 		3FE4B9C41FA715B500DB6DBE /* DataSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE4B9C31FA715B500DB6DBE /* DataSync.swift */; };
+		3FF2972C1FB3A6C4003D2A8A /* FolderMakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FF2972B1FB3A6C4003D2A8A /* FolderMakeViewController.swift */; };
+		3FF2972E1FB45E13003D2A8A /* ss.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3FF2972D1FB45E0E003D2A8A /* ss.jpg */; };
 		3FFCD6FF1F9E16A500C435E1 /* PemoMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FFCD6FE1F9E16A500C435E1 /* PemoMainViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -49,7 +50,6 @@
 		3F7BBFB81FA08D9500624A04 /* MemoFolderData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoFolderData.swift; sourceTree = "<group>"; };
 		3F7BBFBA1FA0956300624A04 /* PemoMainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoMainTableViewCell.swift; sourceTree = "<group>"; };
 		3FCC0DEE1F9F51230065070A /* PemoNewMemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoNewMemoViewController.swift; sourceTree = "<group>"; };
-		3FCC0DF21F9F54AA0065070A /* ss.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ss.jpg; sourceTree = "<group>"; };
 		3FCC0DF41F9F94140065070A /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		3FD2B7061F9DB3E500204362 /* PEMO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PEMO.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3FD2B7091F9DB3E500204362 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -67,6 +67,8 @@
 		3FE3886C1FA08C98002A9B37 /* MemoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoData.swift; sourceTree = "<group>"; };
 		3FE4B9C11FA706AF00DB6DBE /* MemoDAO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoDAO.swift; sourceTree = "<group>"; };
 		3FE4B9C31FA715B500DB6DBE /* DataSync.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSync.swift; sourceTree = "<group>"; };
+		3FF2972B1FB3A6C4003D2A8A /* FolderMakeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderMakeViewController.swift; sourceTree = "<group>"; };
+		3FF2972D1FB45E0E003D2A8A /* ss.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ss.jpg; sourceTree = "<group>"; };
 		3FFCD6FE1F9E16A500C435E1 /* PemoMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoMainViewController.swift; sourceTree = "<group>"; };
 		84F3B371CA6773E7A7317818 /* Pods_PEMO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PEMO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8D0827C7AE4587B52D46C0A /* Pods-PEMO.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PEMO.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PEMO/Pods-PEMO.debug.xcconfig"; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 			children = (
 				3F4B21241FA35F7000095A54 /* PemoFolderCollectionViewController.swift */,
 				3F4B21221FA35EE200095A54 /* PemoFolderCollectionViewCell.swift */,
+				3FF2972B1FB3A6C4003D2A8A /* FolderMakeViewController.swift */,
 			);
 			path = Folder;
 			sourceTree = "<group>";
@@ -148,8 +151,8 @@
 				3FD2B7131F9DB3E500204362 /* Assets.xcassets */,
 				3FD2B7151F9DB3E500204362 /* LaunchScreen.storyboard */,
 				3FD2B7181F9DB3E500204362 /* Info.plist */,
+				3FF2972D1FB45E0E003D2A8A /* ss.jpg */,
 				3FD2B7101F9DB3E500204362 /* PEMO.xcdatamodeld */,
-				3FCC0DF21F9F54AA0065070A /* ss.jpg */,
 			);
 			path = PEMO;
 			sourceTree = "<group>";
@@ -282,7 +285,7 @@
 				3FD2B7171F9DB3E500204362 /* LaunchScreen.storyboard in Resources */,
 				3FD2B7141F9DB3E500204362 /* Assets.xcassets in Resources */,
 				3FD2B70F1F9DB3E500204362 /* Main.storyboard in Resources */,
-				3FCC0DF31F9F54AB0065070A /* ss.jpg in Resources */,
+				3FF2972E1FB45E13003D2A8A /* ss.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,6 +384,7 @@
 				3FE3886D1FA08C98002A9B37 /* MemoData.swift in Sources */,
 				3FE388681FA06340002A9B37 /* User.swift in Sources */,
 				3F23C0941FA3EB5400B9363D /* File.swift in Sources */,
+				3FF2972C1FB3A6C4003D2A8A /* FolderMakeViewController.swift in Sources */,
 				3F4F8F271FA36D10004F3F7A /* HalfModalInteractiveTransition.swift in Sources */,
 				3FD2B7221F9DBF0400204362 /* PemoJoinViewController.swift in Sources */,
 				3F4B21231FA35EE200095A54 /* PemoFolderCollectionViewCell.swift in Sources */,

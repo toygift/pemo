@@ -42,7 +42,7 @@ class MemoData: Object, Mappable {
     @objc dynamic var id: Int = 0
     @objc dynamic var title: String?
     @objc dynamic var content: String?
-    //    @objc dynamic var image: Data = Data()
+    @objc dynamic var image: String?
     @objc dynamic var category_id: Int = 0
     @objc dynamic var created_date: String?
     @objc dynamic var modified_date: String?
@@ -58,7 +58,7 @@ class MemoData: Object, Mappable {
         id <- map["id"]
         title <- map["title"]
         content <- map["content"]
-        //        image
+        image <- map["image"]
         category_id <- map["category_id"]
         created_date <- map["created_date"]//, RCustomDateFormatTransform(formatString: "yyyy-MM-dd HH:mm:ss"))
         modified_date <- map["modified_date"]//, RCustomDateFormatTransform(formatString: "yyyy-MM-dd HH:mm:ss"))
