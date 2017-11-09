@@ -36,6 +36,7 @@ class PemoFolderCollectionViewCell: UICollectionViewCell {
     
     //롱 프레스시에 레이블 버튼 사라지게
     //롱프레스시에 원래 아이콘이미지 사라지게
+    // delehate
     
 //    끝난후에 다시 나타나게
 //    델리게이트 써야됨?
