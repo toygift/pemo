@@ -25,7 +25,7 @@ enum PopOver {
     case writeFolder
 }
 
-class PemoFolderCollectionViewController: UICollectionViewController, HalfModalPresentable,UITextFieldDelegate, KUIPopOverUsable, PemoFolderCollectionViewCellDelegate {
+class PemoFolderCollectionViewController: UICollectionViewController, HalfModalPresentable,UITextFieldDelegate, KUIPopOverUsable, PemoFolderCollectionViewCellDelegate, UIGestureRecognizerDelegate {
     
     // 커스텀 Delegate
     weak var delegate: PemoFolderCollectionViewControllerDelegate?
@@ -39,6 +39,33 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
         print("델리게이트")
     }
     
+    @IBAction func deleteFolder(_ sender: UIButton) {
+        let alert = UIAlertController(title: nil, message: "Delete this folder with all memos?", preferredStyle: .alert)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let delete = UIAlertAction(title: "Delete", style: .default) { (alert) in
+           //alamofire
+        }
+//        let subview = alert.view.subviews.first! as UIView
+//        let alertContentView = subview.subviews.first! as UIView
+//        alertContentView.backgroundColor = UIColor.piAquamarine
+//        alertContentView.layer.cornerRadius = 15
+        alert.view.tintColor = UIColor.piAquamarine
+        alert.addAction(cancel)
+        alert.addAction(delete)
+        self.present(alert, animated: true, completion: nil)
+    }
+    @IBAction func editFolder(_ sender: UIButton) {
+
+        let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "FOLDERMAKE") as! FolderMakeViewController
+        // 투명하게
+        nextViewController.view.backgroundColor = UIColor.white
+        nextViewController.modalPresentationStyle = .fullScreen
+        nextViewController.view.alpha = 0.7
+        
+        self.present(nextViewController, animated: true, completion: nil)
+        
+
+    }
     
     
     private var realm: Realm!
@@ -99,26 +126,92 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
         //        self.navigationController?.navigationBar.backgroundColor = UIColor.piPaleGrey
         
         // long press gestureRecognizer
-        let longpress = UILongPressGestureRecognizer(target: self, action: #selector(self.longpress))
-        longpress.minimumPressDuration = 1.0
-        self.collectionView?.gestureRecognizers = [longpress]
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.longpress))
+        longPressRecognizer.minimumPressDuration = 0.5
+//        longpress.delaysTouchesBegan = true
+        longPressRecognizer.delegate = self
+        longPressRecognizer.cancelsTouchesInView = true
+        
+        self.collectionView?.addGestureRecognizer(longPressRecognizer)
         
     }
-    
-    
+
+    var aa:Bool = true
     // long press gestureRecognizer
-    @objc func longpress(with: UILongPressGestureRecognizer) {
-        let p = with.location(in: self.collectionView)
+    @objc func longpress(gestureRecognizer: UILongPressGestureRecognizer) {
+        
+        let p = gestureRecognizer.location(in: self.collectionView)
         let indexPath = self.collectionView?.indexPathForItem(at: p)
-        if indexPath == nil {
-            // 다른곳 롱프레스시
-            print("어라?? nil인 경우")
-        } else if with.state == .began {
-            // 해당 indexPath 롱 프레스시
-            // 1.alert 창
-            // 2.아이콘 띄우기..위치는 어떻게????
+        let cell = self.collectionView?.cellForItem(at: indexPath!) as! PemoFolderCollectionViewCell
+        
+        if cell.iconImage.isHidden == true {
+            
+        }
+        if gestureRecognizer.state == .began {
             print("롱프레스 시작")
             
+        } else if gestureRecognizer.state == .ended {
+            
+            
+            if let index = indexPath {
+                
+                cell.iconImage.isHidden = true
+                cell.iconlabel.isHidden = true
+                cell.deleteFolder.isHidden = false
+                cell.editFolder.isHidden = false
+                print(index.row)
+                self.aa = false
+            } else {
+                
+            }
+            print("롱프레스 끝")
+        }
+        
+    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        print("touchesBegan")
+        self.collectionView?.reloadData()
+        
+    }
+//
+//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+//        print("시뮬테어스")
+//        return true
+//    }
+//    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+//        print("슈드비긴")
+//        return true
+//    }
+//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+//        print("shouldBeRequiredToFailBy")
+//        return true
+//    }
+//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive press: UIPress) -> Bool {
+//
+//        print("shouldReceive")
+//        return true
+//    }
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        print("shouldReceive")
+//        self.collectionView?.reloadData()
+        return true
+    }
+//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+////        print("shouldRequireFailureOf")
+//        return true
+//    }
+    
+    
+    //        let indexPath = self.collectionView?.indexPathForItem(at: p)
+//        if indexPath == nil {
+//            // 다른곳 롱프레스시
+//            print("어라?? nil인 경우")
+//        } else if with.state == .began {
+//            // 해당 indexPath 롱 프레스시
+//            // 1.alert 창
+//            // 2.아이콘 띄우기..위치는 어떻게????
+//            print("롱프레스 시작")
+    
    
             
 //            let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "FOLDERMAKE") as! FolderMakeViewController
@@ -132,9 +225,9 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
             //        self.present(nextViewController, animated: true) {
             ////            self.dismissPopover(animated: true)
             //        }
-        }
-        
-    }
+//        }
+//
+//    }
     override func viewWillDisappear(_ animated: Bool) {
         print("콜렉션뷰 뷰윌디스어피어")
         self.delegate?.dismiss(with: self)

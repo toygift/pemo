@@ -16,6 +16,7 @@
 		3F4F8F261FA36D10004F3F7A /* HalfModalTransitionAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4F8F231FA36D0F004F3F7A /* HalfModalTransitionAnimator.swift */; };
 		3F4F8F271FA36D10004F3F7A /* HalfModalInteractiveTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4F8F241FA36D10004F3F7A /* HalfModalInteractiveTransition.swift */; };
 		3F4F8F2A1FA36D8A004F3F7A /* AppNavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F4F8F291FA36D8A004F3F7A /* AppNavController.swift */; };
+		3F6527141FB5D2190057BC5D /* PemoSearchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6527131FB5D2190057BC5D /* PemoSearchTableViewController.swift */; };
 		3F7BBFB91FA08D9500624A04 /* MemoFolderData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7BBFB81FA08D9500624A04 /* MemoFolderData.swift */; };
 		3F7BBFBB1FA0956300624A04 /* PemoMainTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F7BBFBA1FA0956300624A04 /* PemoMainTableViewCell.swift */; };
 		3FCC0DEF1F9F51230065070A /* PemoNewMemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FCC0DEE1F9F51230065070A /* PemoNewMemoViewController.swift */; };
@@ -46,6 +47,7 @@
 		3F4F8F231FA36D0F004F3F7A /* HalfModalTransitionAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HalfModalTransitionAnimator.swift; sourceTree = "<group>"; };
 		3F4F8F241FA36D10004F3F7A /* HalfModalInteractiveTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HalfModalInteractiveTransition.swift; sourceTree = "<group>"; };
 		3F4F8F291FA36D8A004F3F7A /* AppNavController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppNavController.swift; sourceTree = "<group>"; };
+		3F6527131FB5D2190057BC5D /* PemoSearchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoSearchTableViewController.swift; sourceTree = "<group>"; };
 		3F7BBFB81FA08D9500624A04 /* MemoFolderData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoFolderData.swift; sourceTree = "<group>"; };
 		3F7BBFBA1FA0956300624A04 /* PemoMainTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoMainTableViewCell.swift; sourceTree = "<group>"; };
 		3FCC0DEE1F9F51230065070A /* PemoNewMemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PemoNewMemoViewController.swift; sourceTree = "<group>"; };
@@ -191,6 +193,7 @@
 			children = (
 				3FFCD6FE1F9E16A500C435E1 /* PemoMainViewController.swift */,
 				3F7BBFBA1FA0956300624A04 /* PemoMainTableViewCell.swift */,
+				3F6527131FB5D2190057BC5D /* PemoSearchTableViewController.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -386,6 +389,7 @@
 				3F4B21231FA35EE200095A54 /* PemoFolderCollectionViewCell.swift in Sources */,
 				3FE4B9C21FA706AF00DB6DBE /* MemoDAO.swift in Sources */,
 				3F4F8F261FA36D10004F3F7A /* HalfModalTransitionAnimator.swift in Sources */,
+				3F6527141FB5D2190057BC5D /* PemoSearchTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

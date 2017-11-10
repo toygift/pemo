@@ -42,6 +42,7 @@ extension FolderMakeViewController {
     func uiCustom() {
         self.foldername.becomeFirstResponder()
         self.foldername.setBottomBorder()
+        self.foldername.textAlignment = .center
     }
 }
 

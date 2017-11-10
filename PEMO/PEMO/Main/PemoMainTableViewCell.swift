@@ -25,12 +25,12 @@ class PemoMainTableViewCell: UITableViewCell {
 //        self.uiCustom()
        
     }
+    
     override func layoutSubviews() {
+        super.layoutSubviews()
   
-        
-        
         self.cellView.layer.cornerRadius = 10
-        self.cellView.layer.masksToBounds = false
+        self.cellView.layer.masksToBounds = true
         
         self.cellView.layer.shadowColor = UIColor.piGreyish.cgColor
         self.cellView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
@@ -42,7 +42,7 @@ class PemoMainTableViewCell: UITableViewCell {
         self.contents.numberOfLines = 4
 //        self.contents.sizeToFit()
         self.contents.textColor = UIColor.piBrownishGrey
-        self.contents.adjustsFontForContentSizeCategory = true
+//        self.contents.adjustsFontForContentSizeCategory = true
         
       
         

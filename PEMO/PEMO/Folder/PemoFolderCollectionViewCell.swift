@@ -21,14 +21,9 @@ class PemoFolderCollectionViewCell: UICollectionViewCell {
     @IBOutlet var iconlabel: UILabel!
     @IBOutlet weak var deleteFolder: UIButton!
     @IBOutlet weak var editFolder: UIButton!
-    @IBAction func deleteAction(_ sender: UIButton) {
-        print("Delete")
-    }
-    
-    @IBAction func editAction(_ sender: UIButton) {
-        print("Edit")
-    }
+  
     override func layoutSubviews() {
+        super.layoutSubviews()
         self.deleteFolder.isHidden = true
         self.editFolder.isHidden = true
     }

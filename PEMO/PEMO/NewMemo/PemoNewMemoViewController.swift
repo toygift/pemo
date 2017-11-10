@@ -55,8 +55,9 @@ class PemoNewMemoViewController: UIViewController {
         
     }
     @IBAction func editMemo(_ sender: UIButton) {
-        updateAndAdd()
-        print("버튼 터치치치치")
+        self.navigationController?.popViewController(animated: true)
+//        updateAndAdd()
+//        print("버튼 터치치치치")
     }
     func updateAndAdd() {
         if self.writeType == .edit {
@@ -134,6 +135,7 @@ class PemoNewMemoViewController: UIViewController {
         toolbar.setItems([attachImage, flexSpace, done], animated: true)
     }
     @objc func keyboardDone() {
+        self.updateAndAdd()
         self.view.endEditing(true)
     }
     @objc func attachImageButton() {

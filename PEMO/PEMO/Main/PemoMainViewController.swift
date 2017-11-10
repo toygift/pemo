@@ -24,7 +24,7 @@ enum DataType {
     case memo
     case folder
 }
-class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderCollectionViewControllerDelegate {
+class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderCollectionViewControllerDelegate, UIGestureRecognizerDelegate {
     
     var tempFolder: [Folder] = []
     var folderId: Int = 0
@@ -39,7 +39,7 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
         return CGSize(width: self.view.frame.width, height: 300)
     }
     
-    var halfModalTransitioningDelegate: HalfModalTransitioningDelegate?
+//    var halfModalTransitioningDelegate: HalfModalTransitioningDelegate?
     //    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     //    var memoDataList: [MemoData] = [] // 메모 리스트
@@ -56,7 +56,13 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
     @IBOutlet var topView: UIView!
     @IBOutlet var bottomView: UIView!
     @IBOutlet var newMemoButton: UIButton!
-    //    @IBOutlet var mainBarButton: UIBarButtonItem!
+    @IBOutlet var folderButton: UIButton!
+    @IBOutlet var searchButton: UIButton!
+    @IBOutlet var folderCheckButton: UIButton!
+    @IBOutlet var  trashButton: UIButton!
+    
+    
+    
     @IBAction func folder(_ sender: UIButton) {
         // 검색버튼 클릭시 글쓰기 버튼 히든, 테이블뷰 탑으로 이동
         self.newMemoButton.isHidden = true
@@ -78,34 +84,30 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
         self.present(nextViewController, animated: true, completion: nil)
     }
     @IBAction func search(_ sender: UIButton) {
-        if searchBar.isHidden == false {
-            searchBar.isHidden = true
-        }
+        self.searchBar.isHidden = false
         self.titleLabel.isHidden = true
         self.newMemoButton.isHidden = true
-        self.topView.addSubview(searchBar)
+//        self.topView.addSubview(searchBar)
         //        self.navigationItem.titleView = searchBar
         searchBar.delegate = self
         searchBar.placeholder = "검색"
         searchBar.sizeToFit()
         searchBar.becomeFirstResponder()
         searchBar.showsCancelButton = true
-        searchBar.tintColor = UIColor.white
+        searchBar.tintColor = UIColor.piAquamarine
         //        searchBar.enablesReturnKeyAutomatically = false
         
     }
-    
-    
-    
-    
     
     
     // MARK: - LIFE CYCLE
     //
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
+        self.topView.addSubview(searchBar)
+        searchBar.isHidden = true
+        self.folderCheckButton.isHidden = true
+        self.trashButton.isHidden = true
         do {
             realm = try Realm()
         } catch {
@@ -113,6 +115,10 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
         }
         self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 65
+        self.tableView.allowsMultipleSelectionDuringEditing = true
+        self.tableView.allowsMultipleSelection = true
+        
+        
         print(Realm.Configuration.defaultConfiguration.fileURL!)
         
         self.firstGetMemo(method: .get, type: .folder) // 폴더불러오는 알라모파이어
@@ -150,16 +156,92 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
         self.tableView.reloadData()
         self.uiCustom()
         
+        
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.longpress))
+        longPressRecognizer.minimumPressDuration = 0.5
+        //        longpress.delaysTouchesBegan = true
+        longPressRecognizer.delegate = self
+//        longPressRecognizer.cancelsTouchesInView = true
+        
+        self.tableView.addGestureRecognizer(longPressRecognizer)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        super.prepare(for: segue, sender: sender)
-        print("프리페어포세그")
-        self.halfModalTransitioningDelegate = HalfModalTransitioningDelegate(viewController: self, presentingViewController: segue.destination)
+    func alamo(with: PemoFolderCollectionViewController, indexPath: IndexPath) {
+        print("PemoFolderCollectionViewControllerDelegate 호출됨")
         
-        segue.destination.modalPresentationStyle = .custom
-        segue.destination.transitioningDelegate = self.halfModalTransitioningDelegate
+        let count = realm.objects(Folder.self)[indexPath.row]
+        let counts = count.memos.filter("TRUEPREDICATE")
+        
+        self.memos = counts
+        self.titleLabel.text = self.folders[indexPath.row].title
+        
+        self.tableView.reloadData()
     }
+    
+    func dismiss(with: PemoFolderCollectionViewController) {
+        // PopOver ViewController 사라지는경우 모든것 원위치 시킴
+        print("dismiss delegate")
+        self.newMemoButton.isHidden = false
+        self.titleLabel.text = "All"
+        self.memos = realm.objects(MemoData.self).sorted(byKeyPath: "id", ascending: false)
+        self.token = memos.observe({ (change) in
+            self.tableView.reloadData()
+        })
+        
+        //        with.dismissPopover(animated: true)
+    }
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(true, animated: true)
+        self.tableView.setEditing(true, animated: true)
+    }
+//    override func setEditing(_ editing: Bool, animated: Bool) {
+//        super.setEditing(editing, animated: animated)
+////        tableView.setEditing(editing, animated: animated)
+//    }
+    @objc func longpress(gestureRecognizer: UILongPressGestureRecognizer) {
+        
+        let point = gestureRecognizer.location(in: self.tableView)
+        let indexPath = self.tableView.indexPathForRow(at: point)
+            
+        
+//        let cell = self.tableView?.cellForRow(at: indexPath!) as! PemoMainTableViewCell
+        
+        if gestureRecognizer.state == .began {
+            print("롱프레스 시작1")
+            self.folderButton.isHidden = true
+            self.newMemoButton.isHidden = true
+            self.searchButton.isHidden = true
+            self.folderCheckButton.isHidden = false
+            self.trashButton.isHidden = false
+            self.setEditing(true, animated: true)
+            print("롱프레스 시작2")
+        }
+//        } else if gestureRecognizer.state == .ended {
+//
+//
+//            if let index = indexPath {
+//
+////                cell.iconImage.isHidden = true
+////                cell.iconlabel.isHidden = true
+////                cell.deleteFolder.isHidden = false
+////                cell.editFolder.isHidden = false
+////                print(index.row)
+////                self.aa = false
+//            } else {
+//
+//            }
+//            print("롱프레스 끝")
+//        }
+        
+    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        super.prepare(for: segue, sender: sender)
+//        print("프리페어포세그")
+//        self.halfModalTransitioningDelegate = HalfModalTransitioningDelegate(viewController: self, presentingViewController: segue.destination)
+//        
+//        segue.destination.modalPresentationStyle = .custom
+//        segue.destination.transitioningDelegate = self.halfModalTransitioningDelegate
+//    }
     override func viewWillAppear(_ animated: Bool) {
         print("뷰윌어피어")
         
@@ -169,41 +251,51 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
         
         
     }
-    
+
 }
 // MARK:- SearchBar Delegate
 //
 extension PemoMainViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        memos = realm.objects(MemoData.self).filter("title contains[c] %@", searchText).sorted(byKeyPath: "id", ascending: false)
+        memos = realm.objects(MemoData.self).filter("content contains[c] %@", searchText).sorted(byKeyPath: "id", ascending: false)
         self.tableView.reloadData()
     }
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        //        self.navigationItem.titleView = nil
-        self.searchBar.isHidden = false
+        self.navigationItem.titleView = nil
+        self.searchBar.isHidden = true
+        
         self.titleLabel.isHidden = false
         self.newMemoButton.isHidden = false
+        self.tableView.reloadData()
         searchBar.endEditing(true)
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        //        self.navigationItem.titleView = nil
-        self.searchBar.isHidden = false
+        self.navigationItem.titleView = nil
+        self.searchBar.isHidden = true
+        
         self.titleLabel.isHidden = false
         self.newMemoButton.isHidden = false
+        self.tableView.reloadData()
         searchBar.endEditing(true)
+    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.folderButton.isHidden = false
+        self.newMemoButton.isHidden = false
+        self.searchButton.isHidden = false
+        self.folderCheckButton.isHidden = true
+        self.trashButton.isHidden = true
+        self.tableView.setEditing(false, animated: true)
+        self.folderCheckButton.setImage(UIImage(named: "PEMO_FOLDER_SELECT.png"), for: .normal)
+        self.trashButton.setImage(UIImage(named: "PEMO_Trash.png"), for: .normal)
     }
 }
 // MARK: - TableView
 //
+
+
 extension PemoMainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //        switch self.memoTypeSelect {
-        //        case .list:
-        //            return self.appDelegate.memoDataList.count
-        //        case .search:
-        //            return self.memoSearch.count
-        //        }
-        return memos.count
+        return self.memos.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
@@ -211,17 +303,11 @@ extension PemoMainViewController: UITableViewDelegate, UITableViewDataSource {
         let cellid = row.image == nil ? "memoCell" : "memoCellImg"
         //        let cellId = section.image == nil ? "memoCellWithImage" : "memoCell" // 서버에서 이미지구현시 앞뒤 바꿀것
         let cell = tableView.dequeueReusableCell(withIdentifier: cellid) as? PemoMainTableViewCell
-        //        func stringDate(_ value: String) -> Date {
-        //            let dateFormatter = DateFormatter()
-        //
-        //            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        //            return dateFormatter.date(from: value)!
-        //        let dateFf = DateFormatter()
-        //        dateFf.dateFormat = "yyyy-MM-dd"
-        //        dateFf.date(from: row.created_date!)
-        //
         cell?.title.text = row.created_date
         cell?.contents.text = row.content
+//        cell?.isEditing = true
+        cell?.tintColor = UIColor.piAquamarine
+        
         DispatchQueue.main.async {
             guard let path = row.image else { return }
             if let imageURL = URL(string: path) {
@@ -241,62 +327,35 @@ extension PemoMainViewController: UITableViewDelegate, UITableViewDataSource {
                 task.resume()
             }
         }
-        // imageData????????????????????????????????????????????????????????????????????????????
-        
         return cell!
     }
-    //    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    //        return 71
-    //    }
-    
-    func alamo(with: PemoFolderCollectionViewController, indexPath: IndexPath) {
-        print("PemoFolderCollectionViewControllerDelegate 호출됨")
-        //        self.memos =
-        //        let cell = tableView(self.tableView, cellForRowAt: indexPath) as? PemoMainTableViewCell
-        
-        //        cell?.title.text = "안녕"
-        //        cell?.contents.text = "하세요"
-        //        self.tableView.reloadData()
-        //        with.dismissPopover(animated: true)
-        //
-        //
-        
-        let count = realm.objects(Folder.self)[indexPath.row]
-        let counts = count.memos.filter("TRUEPREDICATE")
-        
-        self.memos = counts
-        self.titleLabel.text = self.folders[indexPath.row].title
-        
-        self.tableView.reloadData()
-        
-        
-        
-    }
-    func dismiss(with: PemoFolderCollectionViewController) {
-        // PopOver ViewController 사라지는경우 모든것 원위치 시킴
-        print("dismiss delegate")
-        self.newMemoButton.isHidden = false
-        self.titleLabel.text = "All"
-        self.memos = realm.objects(MemoData.self).sorted(byKeyPath: "id", ascending: false)
-        self.token = memos.observe({ (change) in
-            self.tableView.reloadData()
-        })
-        
-        //        with.dismissPopover(animated: true)
-    }
-    
+//    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+//        return .delete
+//    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("didselect")
-        guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NEWMEMO") as? PemoNewMemoViewController else { return }
-        nextViewController.writeType = .edit
-        nextViewController.memoTransfer = self.memos[indexPath.row]
-        nextViewController.memoPkTransfer = self.memos[indexPath.row].id
-        self.navigationController?.pushViewController(nextViewController, animated: true)
+        self.folderCheckButton.setImage(UIImage(named: "PEMO_folderCheck.png"), for: .normal)
+        self.trashButton.setImage(UIImage(named: "PEMO_Trash_S.png"), for: .normal)
+        if tableView.isEditing == true {
+            print("\(indexPath.row)") // memo id 번호 가져옴
+            // 알라모파이어로..카테고리넘버..바꿈
+            // tableview.setEditing(false, animated: false)
+            
+            print("editing")
+            } else {
+            guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NEWMEMO") as? PemoNewMemoViewController else { return }
+            nextViewController.writeType = .edit
+            nextViewController.memoTransfer = self.memos[indexPath.row]
+            nextViewController.memoPkTransfer = self.memos[indexPath.row].id
+            self.navigationController?.pushViewController(nextViewController, animated: true)
+        }
+        
     }
-    //    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-    //        return true
-    //    }
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete", handler: { (deleteAction, indexPath) in
             let alert = UIAlertController(title: nil, message: "Delete Selected Memo", preferredStyle: .alert)
@@ -322,47 +381,19 @@ extension PemoMainViewController: UITableViewDelegate, UITableViewDataSource {
         
         return [deleteAction]
     }
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return .none
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        
+    }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableViewAutomaticDimension
     }
-    //
-    //    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-    //        if section == 0 {
-    //            return 1
-    //        } else {
-    //            return cellSpacingHeight
-    //        }
-    //
-    //    }
-    //    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    //        return nil
-    //    }
-    //    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-    //        return cellSpacingHeight
-    //    }
-    //    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
-    //        return .delete
-    //    }
-    //
-    
-    
-    //
-    //    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    //        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 5))
-    //        headerView.backgroundColor = UIColor.black
-    //        return headerView
-    //    }
-    //    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    //        return self.memoDataList[section].title
-    //    }
-    //    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-    //        if let header = view as? UITableViewHeaderFooterView {
-    //            header.tintColor = UIColor.piPaleGrey
-    //        }
-    //    }
 }
 
 //// MARK: - Alamofire

@@ -27,6 +27,12 @@ extension UIView {
     func addTopBorderWithColor(color: UIColor, width: CGFloat) {
         let border = CALayer()
         border.backgroundColor = color.cgColor
+        
+        border.shadowColor = UIColor.piGreyish.cgColor
+        border.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        border.shadowOpacity = 0.4
+        border.masksToBounds = false
+        
         border.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: width)
         self.layer.addSublayer(border)
     }

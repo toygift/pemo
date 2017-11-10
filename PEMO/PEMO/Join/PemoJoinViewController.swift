@@ -55,6 +55,7 @@ class PemoJoinViewController: UIViewController {
             self.joinWithAlamo(email: email, password: password, user_type: UserType.normal.rawValue)
             //            UIApplication.shared.isNetworkActivityIndicatorVisible = true
         }
+        
     }
     // MARK: - 이메일정규식
     //
@@ -149,6 +150,7 @@ extension PemoJoinViewController {
             switch response.result {
             case .success(let value):
                 let json = JSON(value)
+                self.dismiss(animated: true, completion: nil)
                 print(json)
                 print("########################## 리스폰스 성공 ##########################")
                 //                if !json["username"].arrayValue.isEmpty {
