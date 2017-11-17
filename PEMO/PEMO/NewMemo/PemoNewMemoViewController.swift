@@ -45,8 +45,13 @@ class PemoNewMemoViewController: UIViewController {
     @IBOutlet var bottomView: UIView!
     @IBOutlet var inputTextView: UITextView!
     @IBOutlet var inputImageView: UIImageView!
-    @IBAction func cancelWrite(_ sender: UIBarButtonItem) {
-        self.navigationController?.popViewController(animated: true)
+    @IBAction func cancelWrite(_ sender: UIButton) {
+        if writeType == .new {
+            self.dismiss(animated: true, completion: nil)
+        } else {
+            self.navigationController?.popViewController(animated: true)
+        }
+        
     }
     @IBAction func selectFolderwithMemo(_ sender: UIButton) {
         guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIFOLDERs") as? PemoFolderCollectionViewController else { return }

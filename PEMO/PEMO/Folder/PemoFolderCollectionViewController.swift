@@ -136,7 +136,7 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
         
     }
 
-    var aa:Bool = true
+    
     // long press gestureRecognizer
     @objc func longpress(gestureRecognizer: UILongPressGestureRecognizer) {
         
@@ -149,7 +149,8 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
         }
         if gestureRecognizer.state == .began {
             print("롱프레스 시작")
-            
+            //여기서 뭔가 해야 이전에 선택된게...사라질거 같은데
+            //생각해보장.......졸림
         } else if gestureRecognizer.state == .ended {
             
             
@@ -160,7 +161,7 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
                 cell.deleteFolder.isHidden = false
                 cell.editFolder.isHidden = false
                 print(index.row)
-                self.aa = false
+                
             } else {
                 
             }
@@ -171,6 +172,7 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         print("touchesBegan")
         self.collectionView?.reloadData()
+        
         
     }
 //

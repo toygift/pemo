@@ -689,12 +689,12 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LXv-YM-NoU">
-                                        <rect key="frame" x="93" y="12" width="46" height="45"/>
+                                        <rect key="frame" x="104" y="23" width="25" height="23"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" image="PEMO_FOLDER_SELECT"/>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X5s-kk-UG4">
-                                        <rect key="frame" x="239" y="12" width="42" height="45"/>
+                                        <rect key="frame" x="249" y="23" width="23" height="23"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" image="PEMO_Trash"/>
                                     </button>
@@ -769,7 +769,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="50" height="63"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="folder" highlightedImage="folderCheck" translatesAutoresizingMaskIntoConstraints="NO" id="emv-T6-k3V">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="folder" highlightedImage="PEMO_folderCheck" translatesAutoresizingMaskIntoConstraints="NO" id="emv-T6-k3V">
                                             <rect key="frame" x="13" y="7" width="25" height="23"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="23" id="wbj-a3-UH3"/>
@@ -1062,7 +1062,7 @@
                                             <constraint firstAttribute="width" constant="23" id="YlS-x2-pbN"/>
                                             <constraint firstAttribute="height" constant="21" id="ii0-cD-L00"/>
                                         </constraints>
-                                        <state key="normal" title="Button" image="folderCheck"/>
+                                        <state key="normal" title="Button" image="PEMO_folderCheck"/>
                                         <connections>
                                             <action selector="selectFolderwithMemo:" destination="jKX-dL-Szr" eventType="touchUpInside" id="BbA-CQ-7xA"/>
                                         </connections>
@@ -1081,7 +1081,7 @@
                                             <constraint firstAttribute="height" constant="21" id="Mna-I8-PMm"/>
                                             <constraint firstAttribute="width" constant="23" id="oxi-cU-mPG"/>
                                         </constraints>
-                                        <state key="normal" title="Button" image="trash"/>
+                                        <state key="normal" title="Button" image="PEMO_Trash_S"/>
                                     </button>
                                 </subviews>
                                 <constraints>
@@ -1090,7 +1090,6 @@
                                     <constraint firstAttribute="height" constant="68" id="Ezk-7H-0OT"/>
                                     <constraint firstItem="3eP-gN-lGU" firstAttribute="top" secondItem="lJU-7S-7x5" secondAttribute="top" constant="25" id="HKf-Xe-fYS"/>
                                     <constraint firstItem="Vbq-QP-9JC" firstAttribute="top" secondItem="lJU-7S-7x5" secondAttribute="top" constant="25" id="QC3-6z-Fuy"/>
-                                    <constraint firstItem="Bmt-zI-FKc" firstAttribute="leading" secondItem="3eP-gN-lGU" secondAttribute="trailing" constant="78.700000000000003" id="RNh-MQ-zdv"/>
                                     <constraint firstAttribute="trailing" secondItem="boa-Q0-ztk" secondAttribute="trailing" constant="27" id="Rbg-NI-TdR"/>
                                     <constraint firstItem="Vbq-QP-9JC" firstAttribute="leading" secondItem="lJU-7S-7x5" secondAttribute="leading" constant="27" id="Rlj-3X-0T1"/>
                                     <constraint firstItem="boa-Q0-ztk" firstAttribute="leading" secondItem="Bmt-zI-FKc" secondAttribute="trailing" constant="72" id="YcR-9s-J7Q"/>
@@ -1105,7 +1104,7 @@
                                 <rect key="frame" x="20" y="26" width="21" height="22"/>
                                 <state key="normal" image="1Copy"/>
                                 <connections>
-                                    <action selector="editMemo:" destination="jKX-dL-Szr" eventType="touchUpInside" id="wsU-Gh-ySs"/>
+                                    <action selector="cancelWrite:" destination="jKX-dL-Szr" eventType="touchUpInside" id="phn-Xz-Pvw"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1187,19 +1186,19 @@
         <image name="1Copy3" width="21" height="19"/>
         <image name="PEMO_Create" width="320" height="52"/>
         <image name="PEMO_FOLDER_EDIT" width="24" height="24"/>
-        <image name="PEMO_FOLDER_SELECT" width="46" height="45"/>
+        <image name="PEMO_FOLDER_SELECT" width="25" height="23"/>
         <image name="PEMO_FOLDER_X" width="25" height="23"/>
         <image name="PEMO_Join_un" width="320" height="52"/>
         <image name="PEMO_NewMemo" width="166" height="52"/>
         <image name="PEMO_PIC" width="188" height="58"/>
         <image name="PEMO_Signin_un" width="320" height="52"/>
-        <image name="PEMO_Trash" width="42" height="45"/>
+        <image name="PEMO_Trash" width="23" height="23"/>
+        <image name="PEMO_Trash_S" width="24" height="23"/>
+        <image name="PEMO_folderCheck" width="25" height="23"/>
         <image name="areadyHaveAnAccou" width="177" height="17"/>
         <image name="folder" width="25" height="23"/>
-        <image name="folderCheck" width="25" height="23"/>
         <image name="foldermake" width="71" height="65"/>
         <image name="search" width="24" height="23"/>
-        <image name="trash" width="24" height="23"/>
         <image name="write" width="24" height="25"/>
     </resources>
 </document>

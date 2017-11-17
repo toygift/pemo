@@ -341,7 +341,7 @@ extension PemoMainViewController: UITableViewDelegate, UITableViewDataSource {
             print("\(indexPath.row)") // memo id 번호 가져옴
             // 알라모파이어로..카테고리넘버..바꿈
             // tableview.setEditing(false, animated: false)
-            
+            ㅇㅓ펜드하고 밑에서 삭제editActionsForRowAt
             print("editing")
             } else {
             guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NEWMEMO") as? PemoNewMemoViewController else { return }
