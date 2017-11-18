@@ -78,6 +78,7 @@ class PemoNewMemoViewController: UIViewController {
             newMemo.title = self.subject
             newMemo.content = self.inputTextView.text
             guard let title = self.subject , let content = self.inputTextView.text else { return }
+            print("메모생성")
             self.writeMemoAlamo(title: title, content: content, method: .post, writeType: .new, image: self.selectedImage)
             print("new")
             self.dismiss(animated: true, completion: nil)
@@ -192,7 +193,7 @@ extension PemoNewMemoViewController: UIImagePickerControllerDelegate, UINavigati
 //            self.inputImageView.image = img
         }
         picker.dismiss(animated: true) {
-            self.view.endEditing(true)
+//            self.view.endEditing(true)
         }
     }
 }
@@ -236,7 +237,7 @@ extension PemoNewMemoViewController: UITextViewDelegate {
 // MARK: - Alamofire
 //
 extension PemoNewMemoViewController {
-    func writeMemoAlamo(title: String, content: String, method: HTTPMethod, writeType: WriteType, image: UIImage, category_id: Int = 37)/* -> [MemoData] */{
+    func writeMemoAlamo(title: String, content: String, method: HTTPMethod, writeType: WriteType, image: UIImage, category_id: Int = 0)/* -> [MemoData] */{
         print("알라모진입")
         var url = ""
         if writeType == .new {

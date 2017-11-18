@@ -10,6 +10,20 @@ import UIKit
 
 class PemoMainTableViewCell: UITableViewCell {
 
+//    var memo: MemoData? {
+//        didSet {
+//            title.text = memo?.title
+//            contents.text = memo?.content
+//            if let image = memo?.image {
+//                let imageURL = URL(string: path)
+//                cell?.img.kf.setImage(with: imageURL, placeholder: nil, options: [.transition(ImageTransition.fade(1))], progressBlock: { (receive, total) in
+//                    print("\(indexPath.row + 1) : \(receive)/\(total)")
+//                }, completionHandler: { (image, error, cacheType, imageURL) in
+//                    print("\(indexPath.row + 1) : Finished")
+//                })
+//            }
+//        }
+//    }
     
     @IBOutlet var cellView: UIView!
     @IBOutlet var title: UILabel!

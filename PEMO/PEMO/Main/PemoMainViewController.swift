@@ -29,8 +29,8 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
     
     var tempFolder: [Folder] = []
     var folderId: Int = 0
-    
-    
+    var selectArrar: [Int] = [] // 선택한 row 저장
+
     private var realm: Realm!
     private var memos: Results<MemoData>!
     private var folders: Results<Folder>!
@@ -100,6 +100,59 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
         
     }
     
+    @IBAction func deleteSelectMemo(_ sender: UIButton) {
+        guard let indexP = tableView.indexPathsForSelectedRows else { return }
+        print("선택된 로우",indexP)
+        let alert = UIAlertController(title: nil, message: "Delete selected Memo?", preferredStyle: .alert)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let delete = UIAlertAction(title: "Delete", style: .default) { (_) in
+            do {
+                try self.realm.write {
+                    for i in self.selectArrar {
+                        print("iiiiiii",i)
+                        self.memoDelete(id: i)
+                        print("알라모")
+//                        if indexP.count >= 0 {
+//                            print("인덱스P카운트",indexP.count)
+//                            for i in indexP {
+//                                if !self.memos.isEmpty {
+//                                    print("메모쩜로우",self.memos[i.row])
+//                                    self.realm.delete(self.memos[i.row])
+//                                } else {
+//                                    print("어레이가 비었음")
+//                                }
+//                            }
+//                        }
+                        
+                        print("렘")
+                        print("메모가 \(i)삭제 되었습니다")
+                    }
+                    if indexP.count >= 0 {
+                        print("인덱스P카운트",indexP.count)
+                        for i in indexP {
+                            if !self.memos.isEmpty {
+                                print("메모쩜로우",self.memos[i.row])
+                                self.realm.delete(self.memos[i.row])
+                            } else {
+                                print("어레이가 비었음")
+                            }
+                        }
+                    }
+                    
+                }
+                
+            } catch {
+                print("\(error)")
+            }
+            
+        }
+        alert.addAction(cancel)
+        alert.addAction(delete)
+        self.present(alert, animated: true) {
+            
+        }
+        
+    }
     
     // MARK: - LIFE CYCLE
     //
@@ -204,7 +257,7 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
         let point = gestureRecognizer.location(in: self.tableView)
         let indexPath = self.tableView.indexPathForRow(at: point)
             
-        
+        print(indexPath)
 //        let cell = self.tableView?.cellForRow(at: indexPath!) as! PemoMainTableViewCell
         
         if gestureRecognizer.state == .began {
@@ -348,14 +401,20 @@ extension PemoMainViewController: UITableViewDelegate, UITableViewDataSource {
 //    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("didselect")
+        print("선택")
+        
         self.folderCheckButton.setImage(UIImage(named: "PEMO_folderCheck.png"), for: .normal)
         self.trashButton.setImage(UIImage(named: "PEMO_Trash_S.png"), for: .normal)
         if tableView.isEditing == true {
-            print("\(indexPath.row)") // memo id 번호 가져옴
+            print("추가된 인덱스패스 \(memos[indexPath.row].id)") // memo id 번호 가져옴
+            self.selectArrar.append(memos[indexPath.row].id)
+
+            
             // 알라모파이어로..카테고리넘버..바꿈
             // tableview.setEditing(false, animated: false)
-//            ㅇㅓ펜드하고 밑에서 삭제editActionsForRowAt
+            // 어펜드하고 밑에서 삭제editActionsForRowAt
+            print("추가된 어레이",self.selectArrar)
+
             print("editing")
             } else {
             guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NEWMEMO") as? PemoNewMemoViewController else { return }
@@ -366,6 +425,26 @@ extension PemoMainViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
     }
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        print("디 셀렉트 인덱스패스",indexPath.row)
+        if let index = selectArrar.index(of: memos[indexPath.row].id) {
+            print("memos[indexPath.row].id    :",index)
+            selectArrar.remove(at: index)
+        
+        }
+        
+        print("삭제된 어레이",self.selectArrar)
+    }
+//    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+//        if let indexPathForSelectedRow = tableView.indexPathForSelectedRow {
+//            if (indexPathForSelectedRow.elementsEqual(indexPath)) {
+//                print("ffhhkjhkj")
+//                tableView.deselectRow(at: indexPath, animated: false)
+//                return nil
+//            }
+//        }
+//        return indexPath
+//    }
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }

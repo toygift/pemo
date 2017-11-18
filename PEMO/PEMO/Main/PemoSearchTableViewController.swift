@@ -14,7 +14,7 @@ import RealmSwift
 import ObjectMapper
 import AlamofireObjectMapper
 import ObjectMapper_Realm
-
+import Kingfisher
 
 class PemoSearchTableViewController: UITableViewController {
 
@@ -85,22 +85,31 @@ class PemoSearchTableViewController: UITableViewController {
         cell?.contents.text = row.content
         DispatchQueue.main.async {
             guard let path = row.image else { return }
-            if let imageURL = URL(string: path) {
-                let task = URLSession.shared.dataTask(with: imageURL, completionHandler: { (data, response, error) in
-                    guard let putImage = data else { return }
-                    DispatchQueue.main.async {
-                        cell?.img.image = UIImage(data: putImage)
-                        if cellid == "memoCellImg" {
-                            cell?.img.clipsToBounds = true
-                            cell?.img.layer.cornerRadius = 10
-                            cell?.img.layer.masksToBounds = true
-                            
-                        }
-                        
-                    }
-                })
-                task.resume()
-            }
+            //            if let imageURL = URL(string: path) {
+            let imageURL = URL(string: path)
+            cell?.img.kf.setImage(with: imageURL, placeholder: nil, options: [.transition(ImageTransition.fade(1))], progressBlock: { (receive, total) in
+                print("\(indexPath.row + 1) : \(receive)/\(total)")
+            }, completionHandler: { (image, error, cacheType, imageURL) in
+                print("\(indexPath.row + 1) : Finished")
+            })
+//        DispatchQueue.main.async {
+//            guard let path = row.image else { return }
+//            if let imageURL = URL(string: path) {
+//                let task = URLSession.shared.dataTask(with: imageURL, completionHandler: { (data, response, error) in
+//                    guard let putImage = data else { return }
+//                    DispatchQueue.main.async {
+//                        cell?.img.image = UIImage(data: putImage)
+//                        if cellid == "memoCellImg" {
+//                            cell?.img.clipsToBounds = true
+//                            cell?.img.layer.cornerRadius = 10
+//                            cell?.img.layer.masksToBounds = true
+//
+//                        }
+//
+//                    }
+//                })
+//                task.resume()
+//            }
         }
         // imageData????????????????????????????????????????????????????????????????????????????
         
