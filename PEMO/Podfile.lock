@@ -3,6 +3,7 @@ PODS:
   - AlamofireObjectMapper (5.0.0):
     - Alamofire (~> 4.1)
     - ObjectMapper (~> 3.0)
+  - Kingfisher (4.3.0)
   - KUIPopOver (1.0.0)
   - ObjectMapper (3.0.0)
   - ObjectMapper+Realm (0.5):
@@ -19,6 +20,7 @@ PODS:
 DEPENDENCIES:
   - Alamofire (~> 4.5)
   - AlamofireObjectMapper (~> 5.0)
+  - Kingfisher (~> 4.3)
   - KUIPopOver
   - ObjectMapper (~> 3.0)
   - ObjectMapper+Realm (~> 0.5)
@@ -29,6 +31,7 @@ DEPENDENCIES:
 SPEC CHECKSUMS:
   Alamofire: 2d95912bf4c34f164fdfc335872e8c312acaea4a
   AlamofireObjectMapper: 5fafc816351cbbc0d486611aaeba7461c0cbad49
+  Kingfisher: 475df87bb7196e51a8e9a48b667a5388a4709241
   KUIPopOver: 2c18c6c57fd75667001887c05650d77a42c622e0
   ObjectMapper: 92230db59bf8f341a5c3a3cf0b9fbdde3cf0d87f
   ObjectMapper+Realm: 3188789fb77c189c7a83cb625333a607eb61a08f
@@ -37,6 +40,6 @@ SPEC CHECKSUMS:
   SwiftyJSON: dc88934f85fb50b263b1632b9cbad3402505783e
   Toaster: a6c9532de1ded8105e77376f7dffeb2e12b46dbb
 
-PODFILE CHECKSUM: 0153bc295c96b2382cccfa153b1ed8e96301fc2a
+PODFILE CHECKSUM: 3c422ac5943b55966dc62c7638782781bc931321
 
 COCOAPODS: 1.3.1

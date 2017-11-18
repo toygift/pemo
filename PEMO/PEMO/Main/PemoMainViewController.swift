@@ -15,6 +15,7 @@ import ObjectMapper
 import AlamofireObjectMapper
 import ObjectMapper_Realm
 import KUIPopOver
+import Kingfisher
 
 enum MemoDataType {
     case list
@@ -310,23 +311,36 @@ extension PemoMainViewController: UITableViewDelegate, UITableViewDataSource {
         
         DispatchQueue.main.async {
             guard let path = row.image else { return }
-            if let imageURL = URL(string: path) {
-                let task = URLSession.shared.dataTask(with: imageURL, completionHandler: { (data, response, error) in
-                    guard let putImage = data else { return }
-                    DispatchQueue.main.async {
-                        cell?.img.image = UIImage(data: putImage)
-                        if cellid == "memoCellImg" {
-                            cell?.img.clipsToBounds = true
-                            cell?.img.layer.cornerRadius = 10
-                            cell?.img.layer.masksToBounds = true
-                            
-                        }
-                        
-                    }
-                })
-                task.resume()
+//            if let imageURL = URL(string: path) {
+            let imageURL = URL(string: path)
+            cell?.img.kf.setImage(with: imageURL, placeholder: nil, options: [.transition(ImageTransition.fade(1))], progressBlock: { (receive, total) in
+                print("\(indexPath.row + 1) : \(receive)/\(total)")
+            }, completionHandler: { (image, error, cacheType, imageURL) in
+                print("\(indexPath.row + 1) : Finished")
+            })
+            if cellid == "memoCellImg" {
+                cell?.img.clipsToBounds = true
+                cell?.img.layer.cornerRadius = 10
+                cell?.img.layer.masksToBounds = true
+                
             }
+//                let task = URLSession.shared.dataTask(with: imageURL, completionHandler: { (data, response, error) in
+//                    guard let putImage = data else { return }
+//                    DispatchQueue.main.async {
+//                        cell?.img.image = UIImage(data: putImage)
+//                        if cellid == "memoCellImg" {
+//                            cell?.img.clipsToBounds = true
+//                            cell?.img.layer.cornerRadius = 10
+//                            cell?.img.layer.masksToBounds = true
+//
+//                        }
+//
+//                    }
+//                })
+//                task.resume()
+//            }
         }
+        
         return cell!
     }
 //    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
@@ -341,7 +355,7 @@ extension PemoMainViewController: UITableViewDelegate, UITableViewDataSource {
             print("\(indexPath.row)") // memo id 번호 가져옴
             // 알라모파이어로..카테고리넘버..바꿈
             // tableview.setEditing(false, animated: false)
-            ㅇㅓ펜드하고 밑에서 삭제editActionsForRowAt
+//            ㅇㅓ펜드하고 밑에서 삭제editActionsForRowAt
             print("editing")
             } else {
             guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NEWMEMO") as? PemoNewMemoViewController else { return }
