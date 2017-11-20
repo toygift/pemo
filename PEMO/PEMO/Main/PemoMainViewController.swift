@@ -26,11 +26,12 @@ enum DataType {
     case folder
 }
 class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderCollectionViewControllerDelegate, UIGestureRecognizerDelegate {
-    
+    var tututu:[String:Int] = [:]
     var tempFolder: [Folder] = []
     var folderId: Int = 0
     var selectArrar: [Int] = [] // 선택한 row 저장
-
+    var selectFolder: Int = 0
+    var selectContent: [String] = []
     private var realm: Realm!
     private var memos: Results<MemoData>!
     private var folders: Results<Folder>!
@@ -40,7 +41,7 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
         return CGSize(width: self.view.frame.width, height: 300)
     }
     
-//    var halfModalTransitioningDelegate: HalfModalTransitioningDelegate?
+    //    var halfModalTransitioningDelegate: HalfModalTransitioningDelegate?
     //    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
     //    var memoDataList: [MemoData] = [] // 메모 리스트
@@ -57,16 +58,19 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
     @IBOutlet var topView: UIView!
     @IBOutlet var bottomView: UIView!
     @IBOutlet var newMemoButton: UIButton!
+    @IBOutlet var newMemoButtonIcon: UIButton!
     @IBOutlet var folderButton: UIButton!
     @IBOutlet var searchButton: UIButton!
     @IBOutlet var folderCheckButton: UIButton!
-    @IBOutlet var  trashButton: UIButton!
+    @IBOutlet var trashButton: UIButton!
     
     
     
     @IBAction func folder(_ sender: UIButton) {
         // 검색버튼 클릭시 글쓰기 버튼 히든, 테이블뷰 탑으로 이동
         self.newMemoButton.isHidden = true
+        self.newMemoButtonIcon.isHidden = true
+        
         self.tableView.contentOffset = CGPoint(x: 0, y: 0)
         
         // PopOver Controller 띄움
@@ -88,7 +92,8 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
         self.searchBar.isHidden = false
         self.titleLabel.isHidden = true
         self.newMemoButton.isHidden = true
-//        self.topView.addSubview(searchBar)
+        self.newMemoButtonIcon.isHidden = true
+        //        self.topView.addSubview(searchBar)
         //        self.navigationItem.titleView = searchBar
         searchBar.delegate = self
         searchBar.placeholder = "검색"
@@ -98,6 +103,12 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
         searchBar.tintColor = UIColor.piAquamarine
         //        searchBar.enablesReturnKeyAutomatically = false
         
+    }
+    @IBAction func moveSelectMemo(_ sender: UIButton) {
+        guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIFOLDERs") as? PemoFolderCollectionViewController else { return }
+        nextViewController.popOverType = PopOver.mainFolder
+        nextViewController.delegate = self
+        nextViewController.showPopover(withNavigationController: sender, sourceRect: sender.bounds)
     }
     
     @IBAction func deleteSelectMemo(_ sender: UIButton) {
@@ -112,17 +123,17 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
                         print("iiiiiii",i)
                         self.memoDelete(id: i)
                         print("알라모")
-//                        if indexP.count >= 0 {
-//                            print("인덱스P카운트",indexP.count)
-//                            for i in indexP {
-//                                if !self.memos.isEmpty {
-//                                    print("메모쩜로우",self.memos[i.row])
-//                                    self.realm.delete(self.memos[i.row])
-//                                } else {
-//                                    print("어레이가 비었음")
-//                                }
-//                            }
-//                        }
+                        //                        if indexP.count >= 0 {
+                        //                            print("인덱스P카운트",indexP.count)
+                        //                            for i in indexP {
+                        //                                if !self.memos.isEmpty {
+                        //                                    print("메모쩜로우",self.memos[i.row])
+                        //                                    self.realm.delete(self.memos[i.row])
+                        //                                } else {
+                        //                                    print("어레이가 비었음")
+                        //                                }
+                        //                            }
+                        //                        }
                         
                         print("렘")
                         print("메모가 \(i)삭제 되었습니다")
@@ -215,19 +226,72 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
         longPressRecognizer.minimumPressDuration = 0.5
         //        longpress.delaysTouchesBegan = true
         longPressRecognizer.delegate = self
-//        longPressRecognizer.cancelsTouchesInView = true
+        //        longPressRecognizer.cancelsTouchesInView = true
         
         self.tableView.addGestureRecognizer(longPressRecognizer)
     }
     
     func alamo(with: PemoFolderCollectionViewController, indexPath: IndexPath) {
         print("PemoFolderCollectionViewControllerDelegate 호출됨")
+        self.selectFolder = self.folders[indexPath.item].id
         
-        let count = realm.objects(Folder.self)[indexPath.row]
-        let counts = count.memos.filter("TRUEPREDICATE")
         
-        self.memos = counts
-        self.titleLabel.text = self.folders[indexPath.row].title
+        if tableView.isEditing == true {
+            guard let indexP = tableView.indexPathsForSelectedRows else { return }
+            print("선택된 로우",indexP)
+    
+            do {
+                try self.realm.write {
+               
+                       //여러개 이동
+//                    self.writeMemoAlamo(id: j ,content: i, method: .patch, category_id: self.selectFolder)
+                    
+                    
+                    print("zzzz",self.selectContent)
+                    print(self.selectFolder)
+                    
+//                        for i in self.selectContent {
+//                            for j in self.selectArrar {
+//                                self.writeMemoAlamo(id: j ,content: i, method: .patch, category_id: self.selectFolder)
+//                            }
+//                        }
+                        
+                        print("알라모")
+                        print("렘")
+//                        print("메모가 \(i)수정 되었습니다")
+                    
+                    //                    if indexP.count >= 0 {
+                    //                        print("인덱스P카운트",indexP.count)
+                    //                        for i in indexP {
+                    //                            if !self.memos.isEmpty {
+                    //                                print("메모쩜로우",self.memos[i.row])
+                    //
+                    //                                self.realm.delete(self.memos[i.row])
+                    //                            } else {
+                    //                                print("어레이가 비었음")
+                    //                            }
+                    //                        }
+                    //                    }
+                    
+                }
+                self.selectContent = []
+                
+            } catch {
+                print("\(error)")
+            }
+        } else {
+            let count = realm.objects(Folder.self)[indexPath.row]
+            let counts = count.memos.filter("TRUEPREDICATE")
+            print("폴더인덱스패스row",indexPath.row)
+            print("폴더인덱스패스item",indexPath.item)
+            print("폴더인덱스패스section",indexPath.section)
+//            self.selectFolder = self.folders[indexPath.item].id
+            print("셀럭트폴더",self.selectFolder)
+            self.memos = counts
+            self.titleLabel.text = self.folders[indexPath.row].title
+        }
+        
+        
         
         self.tableView.reloadData()
     }
@@ -236,7 +300,9 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
         // PopOver ViewController 사라지는경우 모든것 원위치 시킴
         print("dismiss delegate")
         self.newMemoButton.isHidden = false
+        self.newMemoButtonIcon.isHidden = false
         self.titleLabel.text = "All"
+        
         self.memos = realm.objects(MemoData.self).sorted(byKeyPath: "id", ascending: false)
         self.token = memos.observe({ (change) in
             self.tableView.reloadData()
@@ -248,17 +314,17 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
         super.setEditing(true, animated: true)
         self.tableView.setEditing(true, animated: true)
     }
-//    override func setEditing(_ editing: Bool, animated: Bool) {
-//        super.setEditing(editing, animated: animated)
-////        tableView.setEditing(editing, animated: animated)
-//    }
+    //    override func setEditing(_ editing: Bool, animated: Bool) {
+    //        super.setEditing(editing, animated: animated)
+    ////        tableView.setEditing(editing, animated: animated)
+    //    }
     @objc func longpress(gestureRecognizer: UILongPressGestureRecognizer) {
         
         let point = gestureRecognizer.location(in: self.tableView)
         let indexPath = self.tableView.indexPathForRow(at: point)
-            
-        print(indexPath)
-//        let cell = self.tableView?.cellForRow(at: indexPath!) as! PemoMainTableViewCell
+        
+//        print(indexPath)
+        //        let cell = self.tableView?.cellForRow(at: indexPath!) as! PemoMainTableViewCell
         
         if gestureRecognizer.state == .began {
             print("롱프레스 시작1")
@@ -270,32 +336,32 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
             self.setEditing(true, animated: true)
             print("롱프레스 시작2")
         }
-//        } else if gestureRecognizer.state == .ended {
-//
-//
-//            if let index = indexPath {
-//
-////                cell.iconImage.isHidden = true
-////                cell.iconlabel.isHidden = true
-////                cell.deleteFolder.isHidden = false
-////                cell.editFolder.isHidden = false
-////                print(index.row)
-////                self.aa = false
-//            } else {
-//
-//            }
-//            print("롱프레스 끝")
-//        }
+        //        } else if gestureRecognizer.state == .ended {
+        //
+        //
+        //            if let index = indexPath {
+        //
+        ////                cell.iconImage.isHidden = true
+        ////                cell.iconlabel.isHidden = true
+        ////                cell.deleteFolder.isHidden = false
+        ////                cell.editFolder.isHidden = false
+        ////                print(index.row)
+        ////                self.aa = false
+        //            } else {
+        //
+        //            }
+        //            print("롱프레스 끝")
+        //        }
         
     }
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        super.prepare(for: segue, sender: sender)
-//        print("프리페어포세그")
-//        self.halfModalTransitioningDelegate = HalfModalTransitioningDelegate(viewController: self, presentingViewController: segue.destination)
-//        
-//        segue.destination.modalPresentationStyle = .custom
-//        segue.destination.transitioningDelegate = self.halfModalTransitioningDelegate
-//    }
+    //    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    //        super.prepare(for: segue, sender: sender)
+    //        print("프리페어포세그")
+    //        self.halfModalTransitioningDelegate = HalfModalTransitioningDelegate(viewController: self, presentingViewController: segue.destination)
+    //
+    //        segue.destination.modalPresentationStyle = .custom
+    //        segue.destination.transitioningDelegate = self.halfModalTransitioningDelegate
+    //    }
     override func viewWillAppear(_ animated: Bool) {
         print("뷰윌어피어")
         
@@ -305,7 +371,7 @@ class PemoMainViewController: UIViewController, KUIPopOverUsable, PemoFolderColl
         
         
     }
-
+    
 }
 // MARK:- SearchBar Delegate
 //
@@ -320,6 +386,7 @@ extension PemoMainViewController: UISearchBarDelegate {
         
         self.titleLabel.isHidden = false
         self.newMemoButton.isHidden = false
+        self.newMemoButtonIcon.isHidden = false
         self.tableView.reloadData()
         searchBar.endEditing(true)
     }
@@ -329,12 +396,14 @@ extension PemoMainViewController: UISearchBarDelegate {
         
         self.titleLabel.isHidden = false
         self.newMemoButton.isHidden = false
+        self.newMemoButtonIcon.isHidden = false
         self.tableView.reloadData()
         searchBar.endEditing(true)
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.folderButton.isHidden = false
         self.newMemoButton.isHidden = false
+        self.newMemoButtonIcon.isHidden = false
         self.searchButton.isHidden = false
         self.folderCheckButton.isHidden = true
         self.trashButton.isHidden = true
@@ -359,12 +428,12 @@ extension PemoMainViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellid) as? PemoMainTableViewCell
         cell?.title.text = row.created_date
         cell?.contents.text = row.content
-//        cell?.isEditing = true
+        //        cell?.isEditing = true
         cell?.tintColor = UIColor.piAquamarine
         
         DispatchQueue.main.async {
             guard let path = row.image else { return }
-//            if let imageURL = URL(string: path) {
+            //            if let imageURL = URL(string: path) {
             let imageURL = URL(string: path)
             cell?.img.kf.setImage(with: imageURL, placeholder: nil, options: [.transition(ImageTransition.fade(1))], progressBlock: { (receive, total) in
                 print("\(indexPath.row + 1) : \(receive)/\(total)")
@@ -377,28 +446,28 @@ extension PemoMainViewController: UITableViewDelegate, UITableViewDataSource {
                 cell?.img.layer.masksToBounds = true
                 
             }
-//                let task = URLSession.shared.dataTask(with: imageURL, completionHandler: { (data, response, error) in
-//                    guard let putImage = data else { return }
-//                    DispatchQueue.main.async {
-//                        cell?.img.image = UIImage(data: putImage)
-//                        if cellid == "memoCellImg" {
-//                            cell?.img.clipsToBounds = true
-//                            cell?.img.layer.cornerRadius = 10
-//                            cell?.img.layer.masksToBounds = true
-//
-//                        }
-//
-//                    }
-//                })
-//                task.resume()
-//            }
+            //                let task = URLSession.shared.dataTask(with: imageURL, completionHandler: { (data, response, error) in
+            //                    guard let putImage = data else { return }
+            //                    DispatchQueue.main.async {
+            //                        cell?.img.image = UIImage(data: putImage)
+            //                        if cellid == "memoCellImg" {
+            //                            cell?.img.clipsToBounds = true
+            //                            cell?.img.layer.cornerRadius = 10
+            //                            cell?.img.layer.masksToBounds = true
+            //
+            //                        }
+            //
+            //                    }
+            //                })
+            //                task.resume()
+            //            }
         }
         
         return cell!
     }
-//    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
-//        return .delete
-//    }
+    //    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    //        return .delete
+    //    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("선택")
@@ -408,47 +477,49 @@ extension PemoMainViewController: UITableViewDelegate, UITableViewDataSource {
         if tableView.isEditing == true {
             print("추가된 인덱스패스 \(memos[indexPath.row].id)") // memo id 번호 가져옴
             self.selectArrar.append(memos[indexPath.row].id)
-
+            self.selectContent.append(memos[indexPath.row].content!)
+            
             
             // 알라모파이어로..카테고리넘버..바꿈
             // tableview.setEditing(false, animated: false)
             // 어펜드하고 밑에서 삭제editActionsForRowAt
             print("추가된 어레이",self.selectArrar)
-
+            
             print("editing")
-            } else {
+        } else {
             guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NEWMEMO") as? PemoNewMemoViewController else { return }
             nextViewController.writeType = .edit
             nextViewController.memoTransfer = self.memos[indexPath.row]
             nextViewController.memoPkTransfer = self.memos[indexPath.row].id
             self.navigationController?.pushViewController(nextViewController, animated: true)
+            self.tableView.reloadData()
         }
         
     }
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
         print("디 셀렉트 인덱스패스",indexPath.row)
-        if let index = selectArrar.index(of: memos[indexPath.row].id) {
+        if let index = selectArrar.index(of: memos[indexPath.row].id), let indexC = selectContent.index(of: memos[indexPath.row].content!) {
             print("memos[indexPath.row].id    :",index)
             selectArrar.remove(at: index)
-        
+            selectContent.remove(at: indexC)
         }
         
         print("삭제된 어레이",self.selectArrar)
     }
-//    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-//        if let indexPathForSelectedRow = tableView.indexPathForSelectedRow {
-//            if (indexPathForSelectedRow.elementsEqual(indexPath)) {
-//                print("ffhhkjhkj")
-//                tableView.deselectRow(at: indexPath, animated: false)
-//                return nil
-//            }
-//        }
-//        return indexPath
-//    }
+    //    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+    //        if let indexPathForSelectedRow = tableView.indexPathForSelectedRow {
+    //            if (indexPathForSelectedRow.elementsEqual(indexPath)) {
+    //                print("ffhhkjhkj")
+    //                tableView.deselectRow(at: indexPath, animated: false)
+    //                return nil
+    //            }
+    //        }
+    //        return indexPath
+    //    }
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
-
+    
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         let deleteAction = UITableViewRowAction(style: .destructive, title: "Delete", handler: { (deleteAction, indexPath) in
             let alert = UIAlertController(title: nil, message: "Delete Selected Memo", preferredStyle: .alert)
@@ -524,8 +595,8 @@ extension PemoMainViewController {
             call.responseJSON { (response) in
                 switch response.result {
                 case .success(let value):
-                    let aa = JSON(value)
-//                    print("메인뷰컨트롤러 처음 정보 불러옴 JSON",aa)
+//                    let aa = JSON(value)
+                    //                    print("메인뷰컨트롤러 처음 정보 불러옴 JSON",aa)
                     //                    print(" 초기 로딩 폴더정보 가져옴 ",folderResponse)
                     guard let folderResponse = Mapper<Folder>().mapArray(JSONObject: value) else { return }
                     
@@ -544,7 +615,7 @@ extension PemoMainViewController {
         case .memo:
             let userDefault = UserDefaults.standard
             guard userDefault.value(forKey: "firstloginmemo") == nil else { return }
-            
+            print("inputMemoRealm")
             let url = mainDomain + "memo/"
             let tokenValue = TokenAuth()
             let headers = tokenValue.getAuthHeaders()
@@ -558,9 +629,10 @@ extension PemoMainViewController {
                         try self.realm.write {
                             
                             for tempfolder in self.folders {
+                                print("self.folders===============================================",self.folders)
                                 for tempmemo in memoResponse {
                                     if tempfolder.id == tempmemo.category_id {
-                                        print(tempmemo.image)
+                                        print("inputMemoRealm for loop")
                                         tempfolder.memos.append(tempmemo)
                                     }
                                 }
@@ -576,9 +648,56 @@ extension PemoMainViewController {
             }
         }
     }
+    func writeMemoAlamo(id: Int, content: String, method: HTTPMethod, category_id: Int = 0)/* -> [MemoData] */{
+        
+        
+        let url = mainDomain + "memo/\(id)/"
+        let tokenValue = TokenAuth()
+        let parameters: Parameters = ["content":content, "category_id":category_id]
+
+        let headers = tokenValue.getAuthHeaders()
+        let call = Alamofire.request(url, method: method, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+        call.responseJSON { (response) in
+            switch response.result {
+            case .success(let value):
+                let json = JSON(value)
+                print(json)
+            case .failure(let error):
+                let json = JSON(error)
+                print(json)
+            }
+        }
+        //
+        //                            do {
+        //                                print("writeType : edit진입")
+        //                                guard let new = Mapper<MemoData>().map(JSONObject: value) else { return }
+        //                                guard let tempFolder = self.realm?.objects(Folder.self).sorted(byKeyPath: "id", ascending: false) else { return }
+        //                                print("이것은 edit입니다 :   ", new)
+        //                                for folder in tempFolder {
+        //                                    if folder.id == new.category_id {
+        //                                        if self.memoTransfer?.id == new.id {
+        //                                            try self.realm.write {
+        //                                                self.memoTransfer?.id = new.id
+        //                                                self.memoTransfer?.title = new.title
+        //                                                self.memoTransfer?.content = new.content
+        //                                                //                    self.memoTransfer?.image = new.image
+        //                                                self.memoTransfer?.category_id = new.category_id
+        //                                                self.memoTransfer?.created_date = new.created_date
+        //                                                self.memoTransfer?.modified_date = new.modified_date
+        //                                            }
+        //                                        }
+        //                                    }
+        //
+        //                                }
+        //                            } catch {
+        //                                print("\(error)")
+        //                            }
+        //
+        
+        
+    }
+    
 }
-
-
 // MARK: - uiCustom
 //
 extension PemoMainViewController {

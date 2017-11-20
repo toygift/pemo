@@ -22,10 +22,14 @@ enum WriteType {
 }
 
 
-class PemoNewMemoViewController: UIViewController {
+class PemoNewMemoViewController: UIViewController, PemoFolderCollectionViewControllerDelegate {
+    func dismiss(with: PemoFolderCollectionViewController) {
+        print("dismiss delegate")
+    }
     
     
     
+    var selectFolder: Int?
     var selectedFolder: Folder!
     private var realm: Realm!
     private var folders: Results<Folder>!
@@ -38,7 +42,7 @@ class PemoNewMemoViewController: UIViewController {
     var memoPkTransfer: Int!
     var writeType: WriteType = .new
     var transferIndexPath: Results<Folder>!
-    var selectedImage: UIImage!
+    var selectedImage: UIImage?
     
     @IBOutlet var dateLabel: UILabel!
     @IBOutlet var foldername: UILabel!
@@ -56,20 +60,21 @@ class PemoNewMemoViewController: UIViewController {
     @IBAction func selectFolderwithMemo(_ sender: UIButton) {
         guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIFOLDERs") as? PemoFolderCollectionViewController else { return }
         nextViewController.popOverType = PopOver.writeFolder
+        nextViewController.delegate = self
         nextViewController.showPopover(withNavigationController: sender, sourceRect: sender.bounds)
         
     }
     @IBAction func editMemo(_ sender: UIButton) {
         self.navigationController?.popViewController(animated: true)
-//        updateAndAdd()
-//        print("버튼 터치치치치")
+        //        updateAndAdd()
+        //        print("버튼 터치치치치")
     }
     func updateAndAdd() {
         if self.writeType == .edit {
             
             //            do {
             guard let title = self.subject , let content = self.inputTextView.text else { return }
-            self.writeMemoAlamo(title: title, content: content, method: .patch, writeType: .edit, image: self.selectedImage)
+            self.writeMemoAlamo(title: title, content: content, method: .patch, writeType: .edit)
             print("edit")
             self.navigationController?.popViewController(animated: true)
         } else {
@@ -77,17 +82,31 @@ class PemoNewMemoViewController: UIViewController {
             let newMemo = MemoData()
             newMemo.title = self.subject
             newMemo.content = self.inputTextView.text
-            guard let title = self.subject , let content = self.inputTextView.text else { return }
+            guard let title = self.subject, let content = self.inputTextView.text, let category = self.selectFolder else { return }
             print("메모생성")
-            self.writeMemoAlamo(title: title, content: content, method: .post, writeType: .new, image: self.selectedImage)
+            //이미지없을경우?
+            
+          
+            if self.selectFolder != 0 {
+                self.writeMemoAlamo(title: title, content: content, method: .post, writeType: .new, category_id: category)
+            } else {
+                self.writeMemoAlamo(title: title, content: content, method: .post, writeType: .new)
+            }
+            
+            
             print("new")
+            self.selectFolder = 0
             self.dismiss(animated: true, completion: nil)
         }
         print("if문 나옴")
         //        self.navigationController?.popViewController(animated: true)
         
     }
-    
+    func alamo2(with: PemoFolderCollectionViewController, indexPath: IndexPath) {
+        print("Delegate 넘오옴")
+        self.selectFolder = self.folders[indexPath.item].id
+        self.foldername.text = self.folders[indexPath.item].title
+    }
     /**********************************************************************************************************************************************************/
     // MARK: - LIFE CYCLE
     //
@@ -104,7 +123,7 @@ class PemoNewMemoViewController: UIViewController {
         self.uiCustom()
         self.toolbar()
         self.inputTextView.delegate = self
-        
+        self.folders = realm?.objects(Folder.self).sorted(byKeyPath: "id", ascending: false)
         switch self.writeType {
         case .new:
             inputTextView.text = "WRITING..."
@@ -137,8 +156,23 @@ class PemoNewMemoViewController: UIViewController {
         done.target = self
         done.action = #selector(keyboardDone)
         // flexSpace
+        let selectfolder = UIBarButtonItem()
+        selectfolder.image = UIImage(named: "PEMO_folderCheck")
+        selectfolder.tintColor = UIColor.piAquamarine
+        selectfolder.target = self
+        selectfolder.action = #selector(selectsss)
+//        let selectImage = UIBarButtonItem()
+//
+//        selectImage.setBackgroundImage(self.selectedImage, for: .normal, barMetrics: .compact)
+        
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        toolbar.setItems([attachImage, flexSpace, done], animated: true)
+        toolbar.setItems([attachImage, flexSpace,selectfolder ,flexSpace, done], animated: true)
+    }
+    @objc func selectsss(sender: UIBarButtonItem) {
+        guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIFOLDERs") as? PemoFolderCollectionViewController else { return }
+        nextViewController.popOverType = PopOver.writeFolder
+        nextViewController.delegate = self
+        nextViewController.showPopover(barButtonItem: sender)
     }
     @objc func keyboardDone() {
         self.updateAndAdd()
@@ -190,10 +224,11 @@ extension PemoNewMemoViewController: UIImagePickerControllerDelegate, UINavigati
             // 서버전송용
             self.selectedImage = img
             // 이미지 나타냄
-//            self.inputImageView.image = img
+            self.toolbar()
+            //            self.inputImageView.image = img
         }
         picker.dismiss(animated: true) {
-//            self.view.endEditing(true)
+            //            self.view.endEditing(true)
         }
     }
 }
@@ -237,7 +272,7 @@ extension PemoNewMemoViewController: UITextViewDelegate {
 // MARK: - Alamofire
 //
 extension PemoNewMemoViewController {
-    func writeMemoAlamo(title: String, content: String, method: HTTPMethod, writeType: WriteType, image: UIImage, category_id: Int = 0)/* -> [MemoData] */{
+    func writeMemoAlamo(title: String, content: String, method: HTTPMethod, writeType: WriteType, category_id: Int = 0)/* -> [MemoData] */{
         print("알라모진입")
         var url = ""
         if writeType == .new {
@@ -249,11 +284,27 @@ extension PemoNewMemoViewController {
             print("pk입니다",pk)
             print("URL입니다",url)
         }
-        
-        let parameters: Parameters = ["title":title, "content":content, "category_id":category_id, "image":image]
+        var parameters: Parameters = ["title":title, "content":content, "category_id":category_id]
         let tokenValue = TokenAuth()
         let headers = tokenValue.getAuthHeaders()
         
+        if let image = self.selectedImage {
+            
+            //multipartFormData.append(UIImageJPEGRepresentation(image, 0.7)!, withName: "image", fileName: "\(title)"+"photo.jpg", mimeType: "image/jpg")
+            let imgData = UIImageJPEGRepresentation(image, 1)
+            
+            let base64String = imgData?.base64EncodedString(options: .lineLength64Characters)
+//            parameters.updateValue(image, forKey: "image")
+            parameters.updateValue(base64String!, forKey: "image")
+        } else {
+            
+            ///////////////////////////////////////////////////////////////
+            // didselect (edit)했을 떄 이미지가 빈것으로 감..
+            // 걸러야함..
+            ///////////////////////////////////////////////////////////////
+            parameters.updateValue("", forKey: "image")
+            print("no image")
+        }
         
         Alamofire.upload(multipartFormData: { (multipartFormData) in
             
@@ -261,8 +312,14 @@ extension PemoNewMemoViewController {
             for (key, value) in parameters {
                 if key == "title" || key == "content" || key == "category_id" {
                     multipartFormData.append(("\(value)").data(using: .utf8)!, withName: key)
-                } else if let imgData = UIImageJPEGRepresentation(image, 0.25) {
-                    multipartFormData.append(imgData, withName: "image", fileName: "\(title)"+"photo.jpg", mimeType: "image/jpg")
+                } else if key == "image" {
+//                    guard let image = self.selectedImage else { return }
+////                    multipartFormData.append(UIImageJPEGRepresentation(image, 0.7)!, withName: "image", fileName: "\(title)"+"photo.jpg", mimeType: "image/jpg")
+//                    let imgData = UIImageJPEGRepresentation(image, 1)
+//                    let base64String = imgData?.base64EncodedString()
+                    
+                    
+                    multipartFormData.append(("\(value)").data(using: .utf8)!, withName: key)
                 }
             }
             
@@ -276,7 +333,7 @@ extension PemoNewMemoViewController {
                     case .success(let value):
                         print(".success진입")
                         print(url)
-                        print(value)
+                        print(JSON(value))
                         switch writeType {
                         case .new:
                             print("석세스")
@@ -314,14 +371,14 @@ extension PemoNewMemoViewController {
                                                 self.memoTransfer?.id = new.id
                                                 self.memoTransfer?.title = new.title
                                                 self.memoTransfer?.content = new.content
-                                                //                    self.memoTransfer?.image = new.image
+                                                self.memoTransfer?.image = new.image
                                                 self.memoTransfer?.category_id = new.category_id
                                                 self.memoTransfer?.created_date = new.created_date
                                                 self.memoTransfer?.modified_date = new.modified_date
+                                            }
                                         }
                                     }
-                                }
-                                
+                                    
                                 }
                             } catch {
                                 print("\(error)")
@@ -346,115 +403,116 @@ extension PemoNewMemoViewController {
         
         
     }
+    
+    
+    
+    //        let call = Alamofire.request(url, method: method, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+    //        call.responseJSON { (response) in
+    //        switch response.result {
+    //
+    //            case .success(let value):
+    //                print(".success진입")
+    //                print(url)
+    //                print(value)
+    //                switch writeType {
+    //                case .new:
+    //                    print("석세스")
+    //                    guard let addNewmemo = Mapper<MemoData>().mapDictionary(JSONObject: value) else {
+    //                        print("new guard let 걸림")
+    //
+    //                        return
+    //
+    //                    }
+    //                    print("나는 aa입니다:                          "  ,addNewmemo)
+    //                    guard let new = addNewmemo["memo"] else { return }
+    //                    print("나는 aa입니다:                          "  ,new)
+    //                    do {
+    //                        try self.realm.write {
+    ////                            self.selectedFolder.memos.append(new)
+    //                        }
+    //                    } catch {
+    //                        print("\(error)")
+    //                    }
+    //
+    //                case .edit:
+    //                    do {
+    //                        print("writeType : edit진입")
+    //                        guard let new = Mapper<MemoData>().map(JSONObject: value) else { return }
+    //                        print("이것은 edit입니다 :   ", new)
+    //                        try self.realm.write {
+    //                            self.memoTransfer?.id = new.id
+    //                            self.memoTransfer?.title = new.title
+    //                            self.memoTransfer?.content = new.content
+    //                            //                    self.memoTransfer?.image = new.image
+    //                            self.memoTransfer?.category_id = new.category_id
+    //                            self.memoTransfer?.created_date = new.created_date
+    //                            self.memoTransfer?.modified_date = new.modified_date
+    //                        }
+    //                    } catch {
+    //                        print("\(error)")
+    //                    }
+    //
+    //                }
+    //
+    //            case .failure(let error):
+    //                print(error)
+    //            }
+    //        }
+    //
+    //    }
+    
+}
+extension PemoNewMemoViewController {
+    func uiCustom() {
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "mainviewcolor")!)
+        self.bottomView.backgroundColor = UIColor.white
+        self.inputTextView.layer.masksToBounds = true
+        self.inputTextView.becomeFirstResponder()
+        //        self.inputTextView.clipsToBounds = true
+        self.inputTextView.layer.cornerRadius = 10
+        self.inputTextView.layer.borderColor = UIColor.piGreyish.cgColor
+        self.inputTextView.layer.borderWidth = 0.5
+        self.inputTextView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        self.inputTextView.layer.shadowOpacity = 0.3
+        let p = CGPoint(x: 0.0, y: 0.0)
+        self.inputTextView.setContentOffset(p, animated: true)
+        self.bottomView.layer.masksToBounds = false
+        self.bottomView.layer.borderColor = UIColor.piGreyish.cgColor
+        self.bottomView.layer.borderWidth = 0.3
+        self.bottomView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
+        self.bottomView.layer.shadowOpacity = 0.3
+        //        self.dateLabel = UILabel()
+        dateLabel.font = UIFont.systemFont(ofSize: 15)
+        dateLabel.contentMode = .scaleAspectFit
+        dateLabel.textColor = UIColor.white
+        foldername.contentMode = .scaleAspectFit
+        let dateFormat = DateFormatter()
+        dateFormat.dateFormat = "yyyy.MM.dd"
+        dateLabel.text = dateFormat.string(from: Date())
         
         
+        let rightBar = UIBarButtonItem(customView: dateLabel)
+        self.navigationItem.rightBarButtonItem = rightBar
         
-        //        let call = Alamofire.request(url, method: method, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
-        //        call.responseJSON { (response) in
-        //        switch response.result {
-        //
-        //            case .success(let value):
-        //                print(".success진입")
-        //                print(url)
-        //                print(value)
-        //                switch writeType {
-        //                case .new:
-        //                    print("석세스")
-        //                    guard let addNewmemo = Mapper<MemoData>().mapDictionary(JSONObject: value) else {
-        //                        print("new guard let 걸림")
-        //
-        //                        return
-        //
-        //                    }
-        //                    print("나는 aa입니다:                          "  ,addNewmemo)
-        //                    guard let new = addNewmemo["memo"] else { return }
-        //                    print("나는 aa입니다:                          "  ,new)
-        //                    do {
-        //                        try self.realm.write {
-        ////                            self.selectedFolder.memos.append(new)
-        //                        }
-        //                    } catch {
-        //                        print("\(error)")
-        //                    }
-        //
-        //                case .edit:
-        //                    do {
-        //                        print("writeType : edit진입")
-        //                        guard let new = Mapper<MemoData>().map(JSONObject: value) else { return }
-        //                        print("이것은 edit입니다 :   ", new)
-        //                        try self.realm.write {
-        //                            self.memoTransfer?.id = new.id
-        //                            self.memoTransfer?.title = new.title
-        //                            self.memoTransfer?.content = new.content
-        //                            //                    self.memoTransfer?.image = new.image
-        //                            self.memoTransfer?.category_id = new.category_id
-        //                            self.memoTransfer?.created_date = new.created_date
-        //                            self.memoTransfer?.modified_date = new.modified_date
-        //                        }
-        //                    } catch {
-        //                        print("\(error)")
-        //                    }
-        //
-        //                }
-        //
-        //            case .failure(let error):
-        //                print(error)
-        //            }
-        //        }
-        //
-        //    }
-        
+        // navigationbar image
+        let viewImage = UIImage(named: "navigationbar")
+        //        let width = self.navigationController?.navigationBar.frame.size.width
+        //        let height = self.navigationController?.navigationBar.frame.size.height
+        //        viewImage?.draw(in: CGRect(x: 0, y: 0, width: width!, height: height!))
+        self.navigationController?.navigationBar.setBackgroundImage(viewImage, for: .default)
     }
-    extension PemoNewMemoViewController {
-        func uiCustom() {
-            self.view.backgroundColor = UIColor(patternImage: UIImage(named: "mainviewcolor")!)
-            self.bottomView.backgroundColor = UIColor.white
-            self.inputTextView.layer.masksToBounds = true
-            //        self.inputTextView.clipsToBounds = true
-            self.inputTextView.layer.cornerRadius = 10
-            self.inputTextView.layer.borderColor = UIColor.piGreyish.cgColor
-            self.inputTextView.layer.borderWidth = 0.5
-            self.inputTextView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-            self.inputTextView.layer.shadowOpacity = 0.3
-            let p = CGPoint(x: 0.0, y: 0.0)
-            self.inputTextView.setContentOffset(p, animated: true)
-            self.bottomView.layer.masksToBounds = false
-            self.bottomView.layer.borderColor = UIColor.piGreyish.cgColor
-            self.bottomView.layer.borderWidth = 0.3
-            self.bottomView.layer.shadowOffset = CGSize(width: 0.0, height: 0.0)
-            self.bottomView.layer.shadowOpacity = 0.3
-            //        self.dateLabel = UILabel()
-            dateLabel.font = UIFont.systemFont(ofSize: 15)
-            dateLabel.contentMode = .scaleAspectFit
-            dateLabel.textColor = UIColor.white
-            foldername.contentMode = .scaleAspectFit
-            let dateFormat = DateFormatter()
-            dateFormat.dateFormat = "yyyy.MM.dd"
-            dateLabel.text = dateFormat.string(from: Date())
-            
-            
-            let rightBar = UIBarButtonItem(customView: dateLabel)
-            self.navigationItem.rightBarButtonItem = rightBar
-            
-            // navigationbar image
-            let viewImage = UIImage(named: "navigationbar")
-            //        let width = self.navigationController?.navigationBar.frame.size.width
-            //        let height = self.navigationController?.navigationBar.frame.size.height
-            //        viewImage?.draw(in: CGRect(x: 0, y: 0, width: width!, height: height!))
-            self.navigationController?.navigationBar.setBackgroundImage(viewImage, for: .default)
-        }
-    }
-    extension PemoNewMemoViewController {
-        func stringDate(_ value: String) -> Date {
-            let dateFormatter = DateFormatter()
-            
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            return dateFormatter.date(from: value)!
-        }
+}
+extension PemoNewMemoViewController {
+    func stringDate(_ value: String) -> Date {
+        let dateFormatter = DateFormatter()
         
-        func DateString(_ value: Date) -> String {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            return dateFormatter.string(from: value as Date)
-        }
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return dateFormatter.date(from: value)!
+    }
+    
+    func DateString(_ value: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return dateFormatter.string(from: value as Date)
+    }
 }

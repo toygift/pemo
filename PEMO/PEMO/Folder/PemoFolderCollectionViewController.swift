@@ -16,9 +16,13 @@ import ObjectMapper_Realm
 import KUIPopOver
 
 
-protocol PemoFolderCollectionViewControllerDelegate: class {
-    func alamo(with: PemoFolderCollectionViewController, indexPath: IndexPath)
-    func dismiss(with: PemoFolderCollectionViewController)
+@objc protocol PemoFolderCollectionViewControllerDelegate: class {
+  @objc optional func alamo(with: PemoFolderCollectionViewController, indexPath: IndexPath)
+  @objc optional func dismiss(with: PemoFolderCollectionViewController)
+  @objc optional func alamo2(with: PemoFolderCollectionViewController, indexPath: IndexPath)
+}
+protocol PemoFolderCollectionViewControllerDelegates: class {
+    
 }
 enum PopOver {
     case mainFolder
@@ -29,6 +33,7 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
     
     // 커스텀 Delegate
     weak var delegate: PemoFolderCollectionViewControllerDelegate?
+    
     //    var memoFolderList: [MemoFolderData] = []
     // KUIPopOver
     var contentSize: CGSize {
@@ -69,7 +74,7 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
     
     
     private var realm: Realm!
-    private var folders: Results<Folder>!
+    /*private*/ var folders: Results<Folder>!
     private var token: NotificationToken!
     
     let plusButton = UIButton(type: .custom)
@@ -232,7 +237,7 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
 //    }
     override func viewWillDisappear(_ animated: Bool) {
         print("콜렉션뷰 뷰윌디스어피어")
-        self.delegate?.dismiss(with: self)
+        self.delegate?.dismiss!(with: self)
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -250,7 +255,7 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "COLLL", for: indexPath) as? PemoFolderCollectionViewCell
-        cell?.iconlabel.text = folders[indexPath.row].title
+        cell?.iconlabel.text = folders[indexPath.item].title
         cell?.deleteFolder.isHidden = true
         cell?.editFolder.isHidden = true
         return cell!
@@ -262,10 +267,11 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
         
         if self.popOverType == PopOver.mainFolder {
             print("팝오버 타입 0번     ->  딜리게이트로 넘어가라...")
-            self.delegate?.alamo(with: self, indexPath: indexPath)
+            self.delegate?.alamo!(with: self, indexPath: indexPath)
             
-        } else {
-            
+        } else if self.popOverType == PopOver.writeFolder {
+            print("팝오버 타입 1번     ->  딜리게이트로 넘어가라...")
+            self.delegate?.alamo2!(with: self, indexPath: indexPath)
         }
         
         

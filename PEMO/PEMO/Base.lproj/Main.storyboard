@@ -692,6 +692,9 @@
                                         <rect key="frame" x="104" y="23" width="25" height="23"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" image="PEMO_FOLDER_SELECT"/>
+                                        <connections>
+                                            <action selector="moveSelectMemo:" destination="xm2-YS-DxY" eventType="touchUpInside" id="Dt2-eQ-5iq"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X5s-kk-UG4">
                                         <rect key="frame" x="249" y="23" width="23" height="23"/>
@@ -739,6 +742,7 @@
                         <outlet property="folderButton" destination="O4K-8c-0O0" id="Bdc-BR-fgV"/>
                         <outlet property="folderCheckButton" destination="LXv-YM-NoU" id="pev-E5-AMd"/>
                         <outlet property="newMemoButton" destination="iEj-k9-xyq" id="V3L-CU-7ja"/>
+                        <outlet property="newMemoButtonIcon" destination="JcL-NN-LVE" id="x2J-4e-omK"/>
                         <outlet property="searchButton" destination="DlE-K0-zNs" id="nQM-q1-Qp4"/>
                         <outlet property="tableView" destination="rG0-uU-gqd" id="Awl-0p-kvV"/>
                         <outlet property="titleLabel" destination="W5c-kN-NJh" id="igN-bh-Cu5"/>
