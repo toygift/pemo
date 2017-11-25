@@ -15,6 +15,7 @@ import ObjectMapper
 import AlamofireObjectMapper
 import ObjectMapper_Realm
 import KUIPopOver
+import Kingfisher
 
 enum WriteType {
     case new
@@ -86,7 +87,7 @@ class PemoNewMemoViewController: UIViewController, PemoFolderCollectionViewContr
             print("메모생성")
             //이미지없을경우?
             
-          
+            
             if self.selectFolder != 0 {
                 self.writeMemoAlamo(title: title, content: content, method: .post, writeType: .new, category_id: category)
             } else {
@@ -123,14 +124,87 @@ class PemoNewMemoViewController: UIViewController, PemoFolderCollectionViewContr
         self.uiCustom()
         self.toolbar()
         self.inputTextView.delegate = self
-        self.folders = realm?.objects(Folder.self).sorted(byKeyPath: "id", ascending: false)
+        self.folders = realm?.objects(Folder.self).sorted(byKeyPath: "id", ascending: true)
         switch self.writeType {
         case .new:
             inputTextView.text = "WRITING..."
             inputTextView.textColor = .lightGray
         case .edit:
+            
+            if memoTransfer?.image != nil {
+                let tempimage = UIImageView()
+                var tempimager : UIImage!
+                guard let path = self.memoTransfer?.image else { return }
+                //            if let imageURL = URL(string: path) {
+                let imageURL = URL(string: path)
+                
+                tempimage.kf.setImage(with: imageURL, placeholder: nil, options: [.transition(ImageTransition.fade(1))], progressBlock: { (receive, total) in
+                    //                print("\(indexPath.row + 1) : \(receive)/\(total)")
+                }, completionHandler: { (image, error, cacheType, imageURL) in
+                    tempimager = image
+                })
+                
+                let attributedStringTextAttachment = NSTextAttachment()
+                attributedStringTextAttachment.image = tempimager//UIImage(named: "launch2")
+                let attributedString = NSMutableAttributedString(string: (self.memoTransfer?.content)!)
+//                attributedString.addAttribute(NSAttributedStringKey.font, value:UIFont(name:"Helvetica", size:18.0)!, range:NSMakeRange(0,35))
+//                attributedString.addAttribute(NSAttributedStringKey.attachment, value:attributedStringTextAttachment, range:NSMakeRange(0,1))
+                let attrStringWithImage = NSAttributedString(attachment: attributedStringTextAttachment)
+                attributedString.append(attrStringWithImage)
+                inputTextView.attributedText = attributedString
+                
+                
+            } else {
+                inputTextView.text = self.memoTransfer?.content
+            }
+////            attributedStringTextAttachment.image = UIImage(named: "launch2")
+//            let attributedString = NSMutableAttributedString(string: (self.memoTransfer?.content)!)
+////            let textAttachment = NSTextAttachment()
+////            textAttachment.image = UIImage(named: "launch2")
+////
+////            let oldWidth = textAttachment.image!.size.width;
+//            
+//            //I'm subtracting 10px to make the image display nicely, accounting
+//            //for the padding inside the textView
+//            
+////            let scaleFactor = oldWidth / (txtBody.frame.size.width - 10);
+////            textAttachment.image = UIImage(cgImage: textAttachment.image!.cgImage!, scale: scaleFactor, orientation: .up)
+//            let attrStringWithImage = NSAttributedString(attachment: attributedStringTextAttachment)
+//            attributedString.append(attrStringWithImage)
+//            inputTextView.attributedText = attributedString
+            
+            
+            
+            
+//            let attributedString = NSMutableAttributedString(string: (self.memoTransfer?.content)!)
+//
+////            attributedString.addAttribute(NSAttributedStringKey.font, value:UIFont(name:"Helvetica", size:12.0)!, range:NSMakeRange(0,35))
+//            attributedString.addAttribute(NSAttributedStringKey.attachment, value:attributedStringTextAttachment, range:NSMakeRange(0,1))
+//
+//
+//            inputTextView.attributedText = attributedString
+            //Uncomment the line below and set the frame of the text view.
+            //textView.frame = CGRect.init(x: 0.0, y: 0.0, width: self.view.frame.size.width, height: self.view.frame.size.height)
+            
+            
+            
+            
             self.navigationItem.title = self.memoTransfer?.title
-            self.inputTextView.text = self.memoTransfer?.content
+//            self.inputTextView.text = self.memoTransfer?.content
+//            if memoTransfer?.image != nil {
+//                
+//                guard let path = self.memoTransfer?.image else { return }
+//                //            if let imageURL = URL(string: path) {
+//                let imageURL = URL(string: path)
+//                inputImageView.kf.setImage(with: imageURL, placeholder: nil, options: [.transition(ImageTransition.fade(1))], progressBlock: { (receive, total) in
+//                    //                print("\(indexPath.row + 1) : \(receive)/\(total)")
+//                }, completionHandler: { (image, error, cacheType, imageURL) in
+//                    //                print("\(indexPath.row + 1) : Finished")
+//                })
+//             
+//            } else {
+//                inputImageView.isHidden = true
+//            }
         }
         
         
@@ -156,17 +230,17 @@ class PemoNewMemoViewController: UIViewController, PemoFolderCollectionViewContr
         done.target = self
         done.action = #selector(keyboardDone)
         // flexSpace
-        let selectfolder = UIBarButtonItem()
-        selectfolder.image = UIImage(named: "PEMO_folderCheck")
-        selectfolder.tintColor = UIColor.piAquamarine
-        selectfolder.target = self
-        selectfolder.action = #selector(selectsss)
-//        let selectImage = UIBarButtonItem()
-//
-//        selectImage.setBackgroundImage(self.selectedImage, for: .normal, barMetrics: .compact)
+//        let selectfolder = UIBarButtonItem()
+//        selectfolder.image = UIImage(named: "PEMO_folderCheck")
+//        selectfolder.tintColor = UIColor.piAquamarine
+//        selectfolder.target = self
+//        selectfolder.action = #selector(selectsss)
+        //        let selectImage = UIBarButtonItem()
+        //
+        //        selectImage.setBackgroundImage(self.selectedImage, for: .normal, barMetrics: .compact)
         
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        toolbar.setItems([attachImage, flexSpace,selectfolder ,flexSpace, done], animated: true)
+        toolbar.setItems([attachImage, /*flexSpace,selectfolder ,*/flexSpace, done], animated: true)
     }
     @objc func selectsss(sender: UIBarButtonItem) {
         guard let nextViewController = self.storyboard?.instantiateViewController(withIdentifier: "NAVIFOLDERs") as? PemoFolderCollectionViewController else { return }
@@ -294,15 +368,15 @@ extension PemoNewMemoViewController {
             let imgData = UIImageJPEGRepresentation(image, 1)
             
             let base64String = imgData?.base64EncodedString(options: .lineLength64Characters)
-//            parameters.updateValue(image, forKey: "image")
+            //            parameters.updateValue(image, forKey: "image")
             parameters.updateValue(base64String!, forKey: "image")
-        } else {
-            
+        } else if ((self.memoTransfer?.image) != nil) {
+                print("7777777")
             ///////////////////////////////////////////////////////////////
             // didselect (edit)했을 떄 이미지가 빈것으로 감..
             // 걸러야함..
             ///////////////////////////////////////////////////////////////
-            parameters.updateValue("", forKey: "image")
+//            parameters.updateValue("", forKey: "image")
             print("no image")
         }
         
@@ -313,10 +387,10 @@ extension PemoNewMemoViewController {
                 if key == "title" || key == "content" || key == "category_id" {
                     multipartFormData.append(("\(value)").data(using: .utf8)!, withName: key)
                 } else if key == "image" {
-//                    guard let image = self.selectedImage else { return }
-////                    multipartFormData.append(UIImageJPEGRepresentation(image, 0.7)!, withName: "image", fileName: "\(title)"+"photo.jpg", mimeType: "image/jpg")
-//                    let imgData = UIImageJPEGRepresentation(image, 1)
-//                    let base64String = imgData?.base64EncodedString()
+                    //                    guard let image = self.selectedImage else { return }
+                    ////                    multipartFormData.append(UIImageJPEGRepresentation(image, 0.7)!, withName: "image", fileName: "\(title)"+"photo.jpg", mimeType: "image/jpg")
+                    //                    let imgData = UIImageJPEGRepresentation(image, 1)
+                    //                    let base64String = imgData?.base64EncodedString()
                     
                     
                     multipartFormData.append(("\(value)").data(using: .utf8)!, withName: key)
@@ -403,63 +477,6 @@ extension PemoNewMemoViewController {
         
         
     }
-    
-    
-    
-    //        let call = Alamofire.request(url, method: method, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
-    //        call.responseJSON { (response) in
-    //        switch response.result {
-    //
-    //            case .success(let value):
-    //                print(".success진입")
-    //                print(url)
-    //                print(value)
-    //                switch writeType {
-    //                case .new:
-    //                    print("석세스")
-    //                    guard let addNewmemo = Mapper<MemoData>().mapDictionary(JSONObject: value) else {
-    //                        print("new guard let 걸림")
-    //
-    //                        return
-    //
-    //                    }
-    //                    print("나는 aa입니다:                          "  ,addNewmemo)
-    //                    guard let new = addNewmemo["memo"] else { return }
-    //                    print("나는 aa입니다:                          "  ,new)
-    //                    do {
-    //                        try self.realm.write {
-    ////                            self.selectedFolder.memos.append(new)
-    //                        }
-    //                    } catch {
-    //                        print("\(error)")
-    //                    }
-    //
-    //                case .edit:
-    //                    do {
-    //                        print("writeType : edit진입")
-    //                        guard let new = Mapper<MemoData>().map(JSONObject: value) else { return }
-    //                        print("이것은 edit입니다 :   ", new)
-    //                        try self.realm.write {
-    //                            self.memoTransfer?.id = new.id
-    //                            self.memoTransfer?.title = new.title
-    //                            self.memoTransfer?.content = new.content
-    //                            //                    self.memoTransfer?.image = new.image
-    //                            self.memoTransfer?.category_id = new.category_id
-    //                            self.memoTransfer?.created_date = new.created_date
-    //                            self.memoTransfer?.modified_date = new.modified_date
-    //                        }
-    //                    } catch {
-    //                        print("\(error)")
-    //                    }
-    //
-    //                }
-    //
-    //            case .failure(let error):
-    //                print(error)
-    //            }
-    //        }
-    //
-    //    }
     
 }
 extension PemoNewMemoViewController {

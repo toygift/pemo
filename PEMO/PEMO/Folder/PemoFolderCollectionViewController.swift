@@ -17,9 +17,11 @@ import KUIPopOver
 
 
 @objc protocol PemoFolderCollectionViewControllerDelegate: class {
-  @objc optional func alamo(with: PemoFolderCollectionViewController, indexPath: IndexPath)
-  @objc optional func dismiss(with: PemoFolderCollectionViewController)
-  @objc optional func alamo2(with: PemoFolderCollectionViewController, indexPath: IndexPath)
+    @objc optional func alamo(with: PemoFolderCollectionViewController, indexPath: IndexPath)
+    @objc optional func dismiss(with: PemoFolderCollectionViewController)
+    @objc optional func alamo2(with: PemoFolderCollectionViewController, indexPath: IndexPath)
+    
+    
 }
 protocol PemoFolderCollectionViewControllerDelegates: class {
     
@@ -50,10 +52,7 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
         let delete = UIAlertAction(title: "Delete", style: .default) { (alert) in
            //alamofire
         }
-//        let subview = alert.view.subviews.first! as UIView
-//        let alertContentView = subview.subviews.first! as UIView
-//        alertContentView.backgroundColor = UIColor.piAquamarine
-//        alertContentView.layer.cornerRadius = 15
+
         alert.view.tintColor = UIColor.piAquamarine
         alert.addAction(cancel)
         alert.addAction(delete)
@@ -74,7 +73,8 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
     
     
     private var realm: Realm!
-    /*private*/ var folders: Results<Folder>!
+    private var folders: Results<Folder>!
+    private var memos: Results<MemoData>!
     private var token: NotificationToken!
     
     let plusButton = UIButton(type: .custom)
@@ -108,28 +108,12 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
             print("\(error)")
         }
         //        self.firstGetFolder(method: .get)
-        folders = realm?.objects(Folder.self).sorted(byKeyPath: "id", ascending: false)
-        //                memos = selectedFolder.memos.sorted(byKeyPath: "id", ascending: false)
+        folders = realm?.objects(Folder.self).sorted(byKeyPath: "id", ascending: true)
+        memos = realm?.objects(MemoData.self).sorted(byKeyPath: "id", ascending: false)
         token = folders.observe({ (change) in
             self.collectionView?.reloadData()
         })
-        
-        //        self.collectionView?.frame.size = CGSize(width: self.view.frame.width, height: 215)
-        //        self.collectionView?.frame = CGRect(x: 0, y: 400, width: self.view.frame.width, height: 215)
-        //        navigationItem.title = selectedFolder.title
-        
-        //        let textfield = UITextField(frame: CGRect(x: 0, y: 0, width: 230, height: 24))
-        //        textfield.placeholder = "폴더이름"
-        ////        textfield.layer.cornerRadius = 1
-        ////        textfield.layer.borderColor = UIColor.piViolet.cgColor
-        ////        textfield.layer.borderWidth = 0.8
-        //        textfield.setBottomBorder()
-        //        textfield.backgroundColor = UIColor.piPaleGrey
-        //        textfield.delegate = self
-        //        self.navigationItem.titleView = textfield
-        //        self.navigationItem.titleView?.backgroundColor = UIColor.piPaleGrey
-        //        self.navigationController?.navigationBar.backgroundColor = UIColor.piPaleGrey
-        
+
         // long press gestureRecognizer
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.longpress))
         longPressRecognizer.minimumPressDuration = 0.5
@@ -269,9 +253,11 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
             print("팝오버 타입 0번     ->  딜리게이트로 넘어가라...")
             self.delegate?.alamo!(with: self, indexPath: indexPath)
             
+            
         } else if self.popOverType == PopOver.writeFolder {
             print("팝오버 타입 1번     ->  딜리게이트로 넘어가라...")
             self.delegate?.alamo2!(with: self, indexPath: indexPath)
+            
         }
         
         
@@ -279,47 +265,6 @@ class PemoFolderCollectionViewController: UICollectionViewController, HalfModalP
         
     }
     
-}
-extension PemoFolderCollectionViewController {
-    /*************************************************************************************************/
-    /*************************************************************************************************/
-    /*************************************없어도 됨                ***********************************/
-    /*************************************************************************************************/
-    /*************************************************************************************************/
-    
-    func firstGetFolder(method: HTTPMethod) {
-        print("알라모")
-        //        let userDefault = UserDefaults.standard
-        //        guard userDefault.value(forKey: "firstloginFolder") == nil else { return }
-        
-        let url = mainDomain + "category/"
-        let tokenValue = TokenAuth()
-        let headers = tokenValue.getAuthHeaders()
-        let call = Alamofire.request(url, method: method, parameters: nil, headers: headers)
-        call.responseJSON { (response) in
-            switch response.result {
-            case .success(let value):
-                
-                let json = JSON(value)
-                print("알라모성공",json)
-                //                print("로그인시 호출되는 알라모파이어 입니다    :    ",json)
-                guard let memoResponse = Mapper<Folder>().mapArray(JSONObject: value) else { return }
-                //                print("불러오기",memoResponse)
-                do {
-                    try self.realm.write {
-                        
-                    }
-                } catch {
-                    
-                }
-                //                userDefault.setValue(true, forKey: "firstloginFolder")
-                
-                
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
 }
 extension PemoFolderCollectionViewController {
     func toolbar() {
@@ -392,7 +337,7 @@ extension PemoFolderCollectionViewController {
 
         self.navigationItem.titleView = container
 
-//        self.navigationItem.rightBarButtonItem = okButton
+        self.navigationItem.rightBarButtonItem = okButton
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.folderMakeTextField?.resignFirstResponder()

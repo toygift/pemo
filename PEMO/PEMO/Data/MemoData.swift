@@ -18,6 +18,8 @@ class Folder: Object, Mappable {
     @objc dynamic var created_date: String?
     @objc dynamic var modified_date: String?
     @objc dynamic var memo_count: Int = 0
+    
+    
 
     var memos: List<MemoData> = List<MemoData>()
 
@@ -50,9 +52,7 @@ class MemoData: Object, Mappable {
     required convenience init?(map: Map) {
         self.init()
     }
-    //    override class func primaryKey() -> String? {
-    //        return "id"
-    //    }
+
     
     func mapping(map: Map) {
         id <- map["id"]

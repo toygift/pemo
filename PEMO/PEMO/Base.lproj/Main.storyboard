@@ -1114,6 +1114,10 @@
                                     <action selector="cancelWrite:" destination="jKX-dL-Szr" eventType="touchUpInside" id="phn-Xz-Pvw"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aGR-Rd-CUj">
+                                <rect key="frame" x="67" y="103" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -1145,6 +1149,7 @@
                         <outlet property="bottomView" destination="lJU-7S-7x5" id="dQC-bf-7UX"/>
                         <outlet property="dateLabel" destination="6hO-nY-jAI" id="scu-qs-HES"/>
                         <outlet property="foldername" destination="Ytf-fF-LuZ" id="FbD-aB-e2s"/>
+                        <outlet property="inputImageView" destination="aGR-Rd-CUj" id="vQW-ZI-VAE"/>
                         <outlet property="inputTextView" destination="gYf-5y-SE4" id="Qqr-Hn-HbB"/>
                     </connections>
                 </viewController>
