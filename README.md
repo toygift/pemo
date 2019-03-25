@@ -1,20 +1,20 @@
-# pemo
-## 간편메모앱
+# 팀 프로젝트 PEMO
 
-### 프로젝트 UI/UX 디자인 by nieun
-에버노트  :  https://goo.gl/FK63Lj
-(제플린프로젝트가 로그인을 해야해서 스크린샷으로 대체함)
+스터디 팀 프로젝트 PEMO 
+간편하고, 폴더링이 가능한 메모앱을 만들고자 디자이너, iOS개발자, AOS개발자, 백앤드 개발자가 모여 시작한 프로젝트.
 
-### 프로젝트 진행상황
-트렐로   :   https://trello.com/b/P0zLV3xP
 
-### 프로젝트 UI진행상황
-에버노트   :   https://goo.gl/GhNtFH
+# 컨셉
 
-### 프로젝트 진행 스크럼 보드
-구글독스   :   https://goo.gl/d1PSDM
+메모를 쉽게 만들고, 폴더를 쉽게 만들고, 사용하기 편한 메모장
 
-### 프로젝트 API 문서 주소
-깃북   :   https://goo.gl/a3FWPb
+# 사용한 Open Source
+
+ - Alamofire : https://github.com/Alamofire/Alamofire
+ - SwiftyJSON : https://github.com/SwiftyJSON/SwiftyJSON
+ - Toaster : https://github.com/devxoul/Toaster
+ - RealmSwift : https://github.com/realm/realm-cocoa
+ - KingFisher : https://github.com/onevcat/Kingfisher
+ - KUIPopOver : https://github.com/Kofktu/KUIPopOver
 ![](1.jpg)![](2.jpg)
 
